@@ -5,15 +5,17 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { signIn } from 'next-auth/react';
+import { useEffect } from 'react';
 
 export default function Welcome() {
-
   const router = useRouter();
-  const { data: session } = useSession(); 
+  const { data: session, status } = useSession(); 
 
-  if (session) {
-    router.push('/homepage');
-  }
+  useEffect(() => {
+    if (status === 'authenticated' && session) {
+      router.replace('/homepage');
+    }
+  }, [session, status, router]);
 
   // Function to handle Google sign-in
   const handleGoogleSignIn = async () => {
@@ -56,7 +58,7 @@ export default function Welcome() {
 
         <button onClick={handleGoogleSignIn} className={styles.button}>
           <Image
-            src="/logo.png" 
+            src="/Logo.png" 
             alt="Google Logo"
             width={20} 
             height={20} 
@@ -68,7 +70,7 @@ export default function Welcome() {
         <button onClick={handleRegisterClick} className={styles.button}>
           Continue with Email   
           <Image
-            src="/vector.png" 
+            src="/Vector.png" 
             alt="Email Logo"
             width={20} 
             height={20} 

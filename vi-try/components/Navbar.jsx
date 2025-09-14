@@ -62,8 +62,8 @@ const Navbar = () => {
         </div>
 
         <button onClick={toggleSidebar} className={styles.toggleButton}>
-  <img src="/menu.png" alt="Menu" className={styles.icon} />
-</button>
+          <Image src="/menu.png" alt="Menu" width={20} height={20} className={styles.icon} />
+        </button>
 
       </div>
 

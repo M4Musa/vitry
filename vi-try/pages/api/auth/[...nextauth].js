@@ -27,10 +27,11 @@ export const authOptions = {
   ],
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
-    signIn: '/welcome',  
+    signIn: '/welcome',
   },
   session: {
-    jwt: true, 
+    strategy: 'jwt',
+    maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   callbacks: {
     async jwt({ token, user }) {
@@ -47,8 +48,14 @@ export const authOptions = {
       session.user.email = token.email;
       session.user.subscription = token.subscription;
       session.user.name = token.name;
-      // Ensure user properties are properly assigned from token
       return session;
+    },
+    async redirect({ url, baseUrl }) {
+      // Allows relative callback URLs
+      if (url.startsWith("/")) return `${baseUrl}${url}`
+      // Allows callback URLs on the same origin
+      else if (new URL(url).origin === baseUrl) return url
+      return baseUrl
     }
   },
 };
