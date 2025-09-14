@@ -11,6 +11,7 @@ import Webcam from "react-webcam";
 import TryOnModal from "@/components/TryOnModal";
 import MagneticButton from "@/components/MagneticButton";
 import Link from "next/link";
+import { formatPricePkr } from "@/utils/currency";
 
 // Added getServerSideProps for server-side rendering
 export async function getServerSideProps(context) {
@@ -287,13 +288,13 @@ const ProductsPage = ({ session, initialProducts }) => {
                   placeholder="Search products..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 pr-4 py-2 border border-gray-300 rounded-md w-full md:w-64"
+                  className="pl-10 pr-4 py-2 border border-gray-300 rounded-md w-full md:w-64 focus:ring-2 focus:ring-[#4B003B] focus:border-[#4B003B] text-gray-900 placeholder-gray-500"
                 />
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </div>
-              <select value={sortOption} onChange={(e) => setSortOption(e.target.value)} className="px-4 py-2 border border-gray-300 rounded-md">
+              <select value={sortOption} onChange={(e) => setSortOption(e.target.value)} className="px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#4B003B] focus:border-[#4B003B] text-gray-900">
                 <option value="">Sort By</option>
                 <option value="priceLowToHigh">Price: Low to High</option>
                 <option value="priceHighToLow">Price: High to Low</option>
@@ -304,11 +305,11 @@ const ProductsPage = ({ session, initialProducts }) => {
 
           {/* Filter Panel */}
           {isFilterOpen && (
-            <div className="bg-white p-6 rounded-lg shadow-md mb-8 animate-fade-in">
-              <h3 className="text-lg font-semibold mb-4">Filter Products</h3>
+            <div className="bg-white p-6 rounded-lg shadow-md mb-8 animate-fade-in border border-gray-200">
+              <h3 className="text-lg font-semibold mb-4 text-gray-900">Filter Products</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div>
-                  <h4 className="font-medium mb-2">Categories</h4>
+                  <h4 className="font-medium mb-2 text-gray-900">Categories</h4>
                   <div className="space-y-2 max-h-60 overflow-y-auto">
                     <div className="flex items-center">
                       <input
@@ -317,10 +318,10 @@ const ProductsPage = ({ session, initialProducts }) => {
                         name="category"
                         onChange={() => setSelectedCategory('')}
                         checked={!Boolean(categories.find(cat => cat === ''))}
-                        className="h-4 w-4"
-                        style={{ color: "#4B003B" }}
+                        className="h-4 w-4 text-[#4B003B] focus:ring-[#4B003B] focus:ring-2"
+                        style={{ accentColor: "#4B003B" }}
                       />
-                      <label htmlFor="all-categories" className="ml-2 text-sm text-gray-700">
+                      <label htmlFor="all-categories" className="ml-2 text-sm text-gray-800 font-medium">
                         All Categories ({filteredProducts.length})
                       </label>
                     </div>
@@ -333,22 +334,22 @@ const ProductsPage = ({ session, initialProducts }) => {
                       { name: 'Traditional Wear', icon: '🥻', count: products.filter(p => p.category?.toLowerCase().includes('traditional') || p.category?.toLowerCase().includes('ethnic')).length },
                       { name: 'Formal Wear', icon: '🤵', count: products.filter(p => p.category?.toLowerCase().includes('formal') || p.category?.toLowerCase().includes('suit')).length }
                     ].map((category, index) => (
-                      <div key={index} className="flex items-center justify-between p-2 hover:bg-gray-100 rounded-md cursor-pointer" onClick={() => setSelectedCategory(category.name)}>
+                      <div key={index} className="flex items-center justify-between p-2 hover:bg-gray-100 rounded-md cursor-pointer transition-colors" onClick={() => setSelectedCategory(category.name)}>
                         <div className="flex items-center">
                           <input
                             id={`category-${index}`}
                             type="radio"
                             name="category"
                             onChange={() => setSelectedCategory(category.name)}
-                            className="h-4 w-4"
-                            style={{ color: "#4B003B" }}
+                            className="h-4 w-4 text-[#4B003B] focus:ring-[#4B003B] focus:ring-2"
+                            style={{ accentColor: "#4B003B" }}
                           />
                           <span className="ml-2 mr-2 text-lg">{category.icon}</span>
-                          <label htmlFor={`category-${index}`} className="text-sm text-gray-700 cursor-pointer">
+                          <label htmlFor={`category-${index}`} className="text-sm text-gray-800 cursor-pointer font-medium">
                             {category.name}
                           </label>
                         </div>
-                        <span className="text-xs text-gray-500 bg-gray-200 px-2 py-1 rounded-full">
+                        <span className="text-xs text-gray-600 bg-gray-200 px-2 py-1 rounded-full font-medium">
                           {category.count}
                         </span>
                       </div>
@@ -357,16 +358,16 @@ const ProductsPage = ({ session, initialProducts }) => {
                     {categories && categories.filter(cat => cat && ![
                       'Dresses', 'Tops & Shirts', 'Pants & Jeans', 'Jackets & Coats', 'Traditional Wear', 'Formal Wear'
                     ].some(popular => cat.toLowerCase().includes(popular.toLowerCase()))).map((category, index) => (
-                      <div key={`dynamic-${index}`} className="flex items-center">
+                      <div key={`dynamic-${index}`} className="flex items-center p-2 hover:bg-gray-100 rounded-md transition-colors">
                         <input
                           id={`dynamic-category-${index}`}
                           type="radio"
                           name="category"
                           onChange={() => setSelectedCategory(category)}
-                          className="h-4 w-4"
-                          style={{ color: "#4B003B" }}
+                          className="h-4 w-4 text-[#4B003B] focus:ring-[#4B003B] focus:ring-2"
+                          style={{ accentColor: "#4B003B" }}
                         />
-                        <label htmlFor={`dynamic-category-${index}`} className="ml-2 text-sm text-gray-700">
+                        <label htmlFor={`dynamic-category-${index}`} className="ml-2 text-sm text-gray-800 font-medium cursor-pointer">
                           {category}
                         </label>
                       </div>
@@ -374,11 +375,11 @@ const ProductsPage = ({ session, initialProducts }) => {
                   </div>
                 </div>
                 <div>
-                  <h4 className="font-medium mb-2">Price Range</h4>
+                  <h4 className="font-medium mb-2 text-gray-900">Price Range</h4>
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-600">${priceRange[0]}</span>
-                      <span className="text-sm text-gray-600">${priceRange[1]}</span>
+                      <span className="text-sm text-gray-800 font-medium">PKR {(priceRange[0] * 278).toLocaleString()}</span>
+                      <span className="text-sm text-gray-800 font-medium">PKR {(priceRange[1] * 278).toLocaleString()}</span>
                     </div>
                     <div className="flex gap-4">
                       <input
@@ -421,7 +422,7 @@ const ProductsPage = ({ session, initialProducts }) => {
                           newRange[0] = Number(e.target.value);
                           setPriceRange(newRange);
                         }}
-                        className="w-full p-2 border border-gray-300 rounded-md"
+                        className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#4B003B] focus:border-[#4B003B] text-gray-900"
                       />
                       <input
                         type="number"
@@ -433,13 +434,13 @@ const ProductsPage = ({ session, initialProducts }) => {
                           newRange[1] = Number(e.target.value);
                           setPriceRange(newRange);
                         }}
-                        className="w-full p-2 border border-gray-300 rounded-md"
+                        className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#4B003B] focus:border-[#4B003B] text-gray-900"
                       />
                     </div>
                   </div>
                 </div>
                 <div>
-                  <h4 className="font-medium mb-2">Material & Style</h4>
+                  <h4 className="font-medium mb-2 text-gray-900">Material & Style</h4>
                   <div className="space-y-2 max-h-60 overflow-y-auto">
                     {/* Popular Materials */}
                     {[
@@ -455,20 +456,20 @@ const ProductsPage = ({ session, initialProducts }) => {
                         p.material?.toLowerCase().includes(material.name.toLowerCase())
                       ).length;
                       return (
-                        <div key={index} className="flex items-center justify-between p-2 hover:bg-gray-100 rounded-md">
+                        <div key={index} className="flex items-center justify-between p-2 hover:bg-gray-100 rounded-md transition-colors">
                           <div className="flex items-center">
                             <input
                               id={`material-${index}`}
                               type="checkbox"
-                              className="h-4 w-4"
+                              className="h-4 w-4 text-[#4B003B] focus:ring-[#4B003B] focus:ring-2"
                               style={{ accentColor: "#4B003B" }}
                             />
                             <span className="ml-2 mr-2">{material.icon}</span>
-                            <label htmlFor={`material-${index}`} className="text-sm text-gray-700 cursor-pointer">
+                            <label htmlFor={`material-${index}`} className="text-sm text-gray-800 cursor-pointer font-medium">
                               {material.name}
                             </label>
                           </div>
-                          <span className="text-xs text-gray-500 bg-gray-200 px-2 py-1 rounded-full">
+                          <span className="text-xs text-gray-600 bg-gray-200 px-2 py-1 rounded-full font-medium">
                             {count}
                           </span>
                         </div>
@@ -478,7 +479,7 @@ const ProductsPage = ({ session, initialProducts }) => {
                     {/* Divider */}
                     {products && Array.from(new Set(products.map(p => p.cloth_type))).filter(Boolean).length > 0 && (
                       <div className="border-t border-gray-200 my-2 pt-2">
-                        <h5 className="text-xs font-medium text-gray-500 mb-2">OTHER TYPES</h5>
+                        <h5 className="text-xs font-medium text-gray-700 mb-2">OTHER TYPES</h5>
                       </div>
                     )}
                     
@@ -488,14 +489,14 @@ const ProductsPage = ({ session, initialProducts }) => {
                         type.toLowerCase().includes(popular.toLowerCase())
                       )
                     ).map((type, index) => (
-                      <div key={`other-${index}`} className="flex items-center pl-4">
+                      <div key={`other-${index}`} className="flex items-center pl-4 p-2 hover:bg-gray-100 rounded-md transition-colors">
                         <input
                           id={`type-${index}`}
                           type="checkbox"
-                          className="h-4 w-4"
+                          className="h-4 w-4 text-[#4B003B] focus:ring-[#4B003B] focus:ring-2"
                           style={{ accentColor: "#4B003B" }}
                         />
-                        <label htmlFor={`type-${index}`} className="ml-2 text-sm text-gray-600">
+                        <label htmlFor={`type-${index}`} className="ml-2 text-sm text-gray-800 cursor-pointer font-medium">
                           {type}
                         </label>
                       </div>
@@ -510,13 +511,13 @@ const ProductsPage = ({ session, initialProducts }) => {
                     setPriceRange([0, 1000]);
                     setSearchTerm('');
                   }}
-                  className="px-4 py-2 text-gray-700 bg-gray-200 rounded-md mr-2"
+                  className="px-4 py-2 text-gray-800 bg-gray-200 hover:bg-gray-300 rounded-md mr-2 font-medium transition-colors"
                 >
                   Reset
                 </button>
                 <button
                   onClick={() => setIsFilterOpen(false)}
-                  className="px-4 py-2 text-white rounded-md"
+                  className="px-4 py-2 text-white rounded-md hover:opacity-90 font-medium transition-opacity"
                   style={{ backgroundColor: "#4B003B" }}
                 >
                   Apply Filters
@@ -527,7 +528,7 @@ const ProductsPage = ({ session, initialProducts }) => {
 
           {/* Products Count & Results */}
           <div className="mb-6">
-            <p className="text-gray-600">
+            <p className="text-gray-800 font-medium">
               Showing {indexOfFirstProduct + 1}-{Math.min(indexOfLastProduct, filteredProducts.length)} of {filteredProducts.length} products
             </p>
           </div>
@@ -584,7 +585,7 @@ const ProductsPage = ({ session, initialProducts }) => {
                           <p className="text-sm text-gray-500 mb-2">{product.brand}</p>
                         </div>
                         <p className="text-lg font-bold" style={{ color: "#4B003B" }}>
-                          ${product.price}
+                          {formatPricePkr(product.price)}
                         </p>
                       </div>
                       {viewMode === "list" && (
@@ -593,7 +594,7 @@ const ProductsPage = ({ session, initialProducts }) => {
                         </p>
                       )}
                       <div className="mt-4 flex justify-between items-center">
-                        <span className="text-sm text-gray-500">
+                        <span className="text-sm text-gray-600 font-medium">
                           {product.cloth_type}
                         </span>
                         {/* Modified MagneticButton */}
@@ -616,7 +617,7 @@ const ProductsPage = ({ session, initialProducts }) => {
                     <button
                       onClick={() => paginate(Math.max(1, currentPage - 1))}
                       disabled={currentPage === 1}
-                      className={`px-3 py-1 rounded-md ${currentPage === 1 ? "text-gray-400 cursor-not-allowed" : "text-gray-700 hover:bg-gray-100"}`}
+                      className={`px-3 py-1 rounded-md font-medium ${currentPage === 1 ? "text-gray-400 cursor-not-allowed" : "text-gray-800 hover:bg-gray-100 transition-colors"}`}
                     >
                       Previous
                     </button>
@@ -624,7 +625,7 @@ const ProductsPage = ({ session, initialProducts }) => {
                       <button
                         key={page}
                         onClick={() => paginate(page)}
-                        className={`w-8 h-8 flex items-center justify-center rounded-md ${currentPage === page ? "text-white" : "text-gray-700 hover:bg-gray-100"}`}
+                        className={`w-8 h-8 flex items-center justify-center rounded-md font-medium transition-colors ${currentPage === page ? "text-white" : "text-gray-800 hover:bg-gray-100"}`}
                         style={{ backgroundColor: currentPage === page ? "#4B003B" : "transparent" }}
                       >
                         {page}
@@ -633,7 +634,7 @@ const ProductsPage = ({ session, initialProducts }) => {
                     <button
                       onClick={() => paginate(Math.min(totalPages, currentPage + 1))}
                       disabled={currentPage === totalPages}
-                      className={`px-3 py-1 rounded-md ${currentPage === totalPages ? "text-gray-400 cursor-not-allowed" : "text-gray-700 hover:bg-gray-100"}`}
+                      className={`px-3 py-1 rounded-md font-medium ${currentPage === totalPages ? "text-gray-400 cursor-not-allowed" : "text-gray-800 hover:bg-gray-100 transition-colors"}`}
                     >
                       Next
                     </button>
@@ -647,7 +648,7 @@ const ProductsPage = ({ session, initialProducts }) => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               <h3 className="mt-4 text-lg font-medium text-gray-900">No products found</h3>
-              <p className="mt-2 text-gray-500">Try adjusting your search or filter criteria</p>
+              <p className="mt-2 text-gray-700">Try adjusting your search or filter criteria</p>
               <button
                 onClick={() => {
                   setSelectedCategory('');

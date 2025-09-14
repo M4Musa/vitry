@@ -1,18 +1,51 @@
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ShoppingBagIcon, UserGroupIcon, PhoneIcon, PencilAltIcon, LogoutIcon } from '@heroicons/react/solid';
-import { signOut } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import styles from './Navbar.module.css';
 import { useRouter } from 'next/router';
 
 const Navbar = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const { data: session, status } = useSession();
   const router = useRouter();
+  const sidebarRef = useRef(null);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
+
+  // Close sidebar when clicking outside or pressing Escape
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (isSidebarOpen && sidebarRef.current && !sidebarRef.current.contains(event.target)) {
+        setIsSidebarOpen(false);
+      }
+    };
+
+    const handleKeyDown = (event) => {
+      if (isSidebarOpen && event.key === 'Escape') {
+        setIsSidebarOpen(false);
+      }
+    };
+
+    if (isSidebarOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('touchstart', handleClickOutside);
+      document.addEventListener('keydown', handleKeyDown);
+      // Prevent body scroll when sidebar is open
+      document.body.style.overflow = 'hidden';
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+      // Restore body scroll
+      document.body.style.overflow = 'unset';
+    };
+  }, [isSidebarOpen]);
 
   return (
     <div className={styles.container}>
@@ -55,21 +88,46 @@ const Navbar = () => {
             <PhoneIcon className={styles.icon} />
             <span className={styles.navText}></span>
           </Link>
+          {/* Authentication Status */}
+          {status === 'loading' ? (
+            <div className={styles.authStatus}>Loading...</div>
+          ) : session ? (
+            <div className={styles.userInfo}>
+              <span className={styles.welcomeText}>Welcome, {session.user.name || session.user.email}</span>
+              <button onClick={() => signOut()} className={styles.logoutButton}>
+                Logout
+              </button>
+            </div>
+          ) : (
+            <div className={styles.authButtons}>
+              <Link href="/login" className={styles.loginButton}>
+                Login
+              </Link>
+              <Link href="/Register" className={styles.registerButton}>
+                Register
+              </Link>
+            </div>
+          )}
           {/* <Link href="/blog" className={styles.navLink}>
             <PencilAltIcon className={styles.icon} />
             <span className={styles.navText}>Blog</span>
           </Link> */}
         </div>
 
-        <button onClick={toggleSidebar} className={styles.toggleButton}>
+        <button 
+          onClick={toggleSidebar} 
+          className={styles.toggleButton}
+          aria-label={isSidebarOpen ? 'Close menu' : 'Open menu'}
+          aria-expanded={isSidebarOpen}
+        >
           <Image src="/menu.png" alt="Menu" width={20} height={20} className={styles.icon} />
         </button>
 
       </div>
 
       {isSidebarOpen && (
-        <div className={styles.sidebarOverlay}>
-          <div className={styles.sidebar}>
+        <div className={styles.sidebarOverlay} role="dialog" aria-modal="true" aria-label="Navigation menu">
+          <div className={styles.sidebar} ref={sidebarRef}>
             <h2 className={styles.sidebarTitle} >Categories</h2>
             <ul className={styles.sidebarList}>
   <li className={styles.sidebarItem} onClick={() => router.push("/ProductsPage?category=Pants")}>
@@ -83,23 +141,39 @@ const Navbar = () => {
   </li>
 </ul>
             <h2 className={styles.sidebarTitle}>Account</h2>
-            <ul className={styles.sidebarList}>
-              <li className={styles.sidebarItem} onClick={() => router.push("/profile")}>Profile</li>
-              <li className={styles.sidebarItem} onClick={() => router.push("/subscription")}>
-        Subscription
-      </li>
-              <li className={styles.sidebarItem} onClick={() => router.push("/settings")}>
-        Settings
-      </li>
-              <li 
-                className={styles.sidebarItem}
-                onClick={() => signOut()}
-              >
-                Logout
-              </li>
-            </ul>
+            {session ? (
+              <>
+                <div className={styles.sidebarUserInfo}>
+                  <p className={styles.userGreeting}>Hello, {session.user.name || session.user.email}!</p>
+                </div>
+                <ul className={styles.sidebarList}>
+                  <li className={styles.sidebarItem} onClick={() => router.push("/profile")}>Profile</li>
+                  <li className={styles.sidebarItem} onClick={() => router.push("/subscription")}>
+            Subscription
+          </li>
+                  <li className={styles.sidebarItem} onClick={() => router.push("/settings")}>
+            Settings
+          </li>
+                  <li 
+                    className={styles.sidebarItem}
+                    onClick={() => signOut()}
+                  >
+                    Logout
+                  </li>
+                </ul>
+              </>
+            ) : (
+              <ul className={styles.sidebarList}>
+                <li className={styles.sidebarItem} onClick={() => router.push("/login")}>Login</li>
+                <li className={styles.sidebarItem} onClick={() => router.push("/Register")}>Register</li>
+              </ul>
+            )}
             
-            <button onClick={toggleSidebar} className={styles.closeButton}>
+            <button 
+              onClick={toggleSidebar} 
+              className={styles.closeButton}
+              aria-label="Close menu"
+            >
               Close
             </button>
           </div>

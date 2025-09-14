@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link'; 
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
+import { Eye, EyeOff } from 'lucide-react';
 
 export default function Register() {
   const router = useRouter();
@@ -19,8 +20,11 @@ export default function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState(""); 
+  const [success, setSuccess] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   // Email validation regex
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -33,8 +37,13 @@ export default function Register() {
     setError("");
     setSuccess("");
 
-    if (!name || !email || !password) {
+    if (!name || !email || !password || !confirmPassword) {
       setError("Please fill all the fields");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
       return;
     }
 
@@ -71,6 +80,7 @@ export default function Register() {
         setEmail("");
         setName("");
         setPassword("");
+        setConfirmPassword("");
         setSuccess("A verification email has been sent !");
       } else {
         const errorData = await res.json(); 
@@ -152,11 +162,37 @@ export default function Register() {
           <Image src="/vector_1.png" width={16} height={16} className={styles.inputIcon} alt="Password Icon" />
           <input 
             onChange={p => setPassword(p.target.value)}
-            type="password" 
+            type={showPassword ? "text" : "password"} 
             placeholder="Enter your password" 
             className={styles.input} 
             value={password} 
           />
+          <button 
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className={styles.eyeButton}
+          >
+            {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+          </button>
+        </div>
+
+        <p className={styles.text2}>Confirm Password</p>
+        <div className={styles.inputContainer}>
+          <Image src="/vector_1.png" width={16} height={16} className={styles.inputIcon} alt="Password Icon" />
+          <input 
+            onChange={p => setConfirmPassword(p.target.value)}
+            type={showConfirmPassword ? "text" : "password"} 
+            placeholder="Confirm your password" 
+            className={styles.input} 
+            value={confirmPassword} 
+          />
+          <button 
+            type="button"
+            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            className={styles.eyeButton}
+          >
+            {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+          </button>
         </div>
 
         <button onClick={handleSubmit} className={styles.RegisterButton}>Register</button>

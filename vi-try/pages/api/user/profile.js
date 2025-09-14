@@ -6,74 +6,228 @@ import { IncomingForm } from 'formidable';
 import fs from 'fs';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
-import admin from 'firebase-admin';
+import { storeImageInDatabase } from '@/utils/sessionImageStorage';
+// Temporarily disable Firebase to avoid JWT signature issues
+// TODO: Fix Firebase service account key and re-enable
+let bucket = null;
+let useFirebaseStorage = false;
 
-// Initialize Firebase Admin SDK if it hasn't been initialized yet
-if (!admin.apps.length) {
-  const serviceAccount = {
-    "type": "service_account",
-    "project_id": "vi-try",
-    "private_key_id": "9979a9737b1b762d5bc6835969d2600c749ef1d8",
-    "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCkyNlAEGkaLMbu\nVm7VYjcpj0bpED4tjttZI8Jfbds5oHHXfF/6RHGdMLo9cj36rCEAhUrjn8j+YzJi\nDJmgGMY18gisETXukF2wk810eK4CIeitVvae+dNZwC6UJgDZCUZs5+rH55491B3L\nkF9Jh726rKfuPo1scgBlur99UteTBnd8nW9RWEM3chpgoK5yjenHrOHH97QOcWf0\nFMCKOflU2XMKOeJTZU90pyXQvhiSC0xKNudoivQPdqnQvH6TVqwdHx7RhbKaQ6H1\n9ncN0PJHPQwuldZUedwVka8Vu8vZoRiElPpMsjcTPlUO4DFWObJFYSzaTMl+RVJe\n1CEuMuC5AgMBAAECggEABKG9Ioz7iU/wJQeirKaKtqU3eOpbFxB8h6ZGysQlnPpu\nrMALGhelqmWR3JOLHLJNKKy2eMy3W3gqFMG2KT79Bkvn9L80mQCvk3yqEh+ow3hU\nyBeJTdlnmI6beJBTZoZZV4sSyTzwUJxXXI8RsJlLStWa0Eprkvxm2LUtt/31v4UL\n1oJ7rSbzhNoC1r/7UdUymWsDDLTSgo9MC+CeMiqbQaxQGCm5WitN3DHUvzK+dL0w\nOMcsccnkWglbS0+0HL4zC9oZ0pZsT1FD1u3xvdzPrXC8DLvj0sx/h92gURw62OBS\nUqHXH2l4jFplxPMd1JQjp1hKYvSzDdsjAkvnQBgHcQKBgQDTGqy+YoI99kX4CMjF\n38Bk1YYlZiEZ/tqLnf4uzxvTP04C61YjSqqcILLa/OkxVExYUfzc7wHsaTkXrb+6\nCZOjoPGNfV+lZPk2mqftBMRqtIHziXvDLxmcqg0DANuUbWEj7SS0+y3pNckc81XF\n3txfCHekHXYsQkN5VFCaZ+sY8QKBgQDH1FrNtzaC6Spe3O6aYGOZUtvjPv3zzLyg\n3h3sqiOG9Z/CiH9NuA2KNdurAgpZvMdz9zLwnT0QNLmo54ai8xetgTZrjge8VDfu\nkcLMa5skVL6+3+3kSXIy08+NNvgXKsWDO7aN3EPqG+6yVeOiYmbUZTQyxJLvOA4G\nxX4eFBUESQKBgBGT6ghcSX4BUKgrixQ24l1DDk106JKyjt4LRMv/ANEhN0y07dI4\neGZRrrLfVkd+PnEoOobm++EEjfVzyUAjZgC8+QAQDXPHKZ0rWYo52GUOLLfrnbuN\n43MREc5LNv1v8iO8rk7Hj3YYvWtEs8KrIOxk1xl6PonG5rlmlOOWfZPxAoGADnfQ\njz5povbQy4eBewnpjCtUolJoPqOfMKKEViNHaTkVdRc+6FigGlal7e664x5o7nuC\nY6tuxWKb4p/IvrmNCFHnp8fjxX3vgsVo7jYISIweN2GtLq8mpolxaI8HTV4aaNME\n96ZwAF4/XQgc8B/hxBUDv30+CjXrxg+8ft8DWokCgYEAltQSoB3I6J1SGjRsxvdU\nuG278Vn4Lgcv84MQiyjyxCStD1aqJH9XjBNjTT92eLl0AGRa2MtuxC4m3gzS33ce\nvUWstXFbjU6p85NPsmXfCVoI9o+sMzrl20vmNb+sBZpCgoKaAGT6E9tpJuDflLUz\nNqdoVLo/Oy2oq/+hLMpgoK0=\n-----END PRIVATE KEY-----\n",
-    "client_email": "firebase-adminsdk-z630y@vi-try.iam.gserviceaccount.com",
-    "client_id": "101330092887679197657",
-    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-    "token_uri": "https://oauth2.googleapis.com/token",
-    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-    "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-z630y%40vi-try.iam.gserviceaccount.com",
-    "universe_domain": "googleapis.com"
-  };
-  
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    storageBucket: "vi-try.appspot.com"
-  });
+console.log('ℹ️ Firebase temporarily disabled, using local storage for profile images');
+
+// Uncomment below when Firebase credentials are fixed:
+/*
+try {
+  const { getFirebaseStorage } = require('@/config/firebaseAdmin');
+  bucket = getFirebaseStorage();
+  useFirebaseStorage = true;
+  console.log('✅ Firebase storage initialized successfully');
+} catch (error) {
+  console.warn('⚠️ Firebase storage not available, using local storage fallback:', error.message);
+  useFirebaseStorage = false;
 }
+*/
 
-// Get a reference to the storage bucket
-const bucket = admin.storage().bucket();
-
-// Disable the default body parser to handle form data
+// Configure body parser to handle both JSON and form data
 export const config = {
   api: {
-    bodyParser: false,
+    bodyParser: {
+      sizeLimit: '10mb', // Set a larger size limit to handle base64 images
+    },
   },
 };
+
+// Function to upload file to local storage (fallback)
+async function uploadFileToLocal(file, filename) {
+  try {
+    console.log('Using local storage fallback for:', filename);
+    
+    // Create uploads directory if it doesn't exist
+    const uploadsDir = path.join(process.cwd(), 'public', 'uploads', 'profile_photos');
+    if (!fs.existsSync(uploadsDir)) {
+      fs.mkdirSync(uploadsDir, { recursive: true });
+    }
+    
+    // Copy file to uploads directory
+    const sourcePath = file.filepath || file.path;
+    const destinationPath = path.join(uploadsDir, filename);
+    
+    // Copy the file
+    fs.copyFileSync(sourcePath, destinationPath);
+    
+    // Return the public URL
+    const publicUrl = `/uploads/profile_photos/${filename}`;
+    console.log('File saved locally:', publicUrl);
+    
+    return publicUrl;
+  } catch (error) {
+    console.error('Error saving file locally:', error);
+    throw new Error(`Local storage failed: ${error.message}`);
+  }
+}
 
 // Function to upload file to Firebase Storage
 async function uploadFileToFirebase(file, filename) {
   return new Promise((resolve, reject) => {
-    const fileBuffer = fs.readFileSync(file.filepath || file.path);
-    
-    // Create a reference to the file in Firebase Storage
-    const fileRef = bucket.file(`profile_photos/${filename}`);
-    
-    // Create a write stream and upload the file
-    const blobStream = fileRef.createWriteStream({
-      metadata: {
-        contentType: file.mimetype || file.type,
-      },
-      resumable: false, // For simplicity, disable resumable uploads
-    });
-    
-    // Handle errors
-    blobStream.on('error', (error) => {
-      console.error('Firebase upload error:', error);
-      reject(error);
-    });
-    
-    // Handle upload completion
-    blobStream.on('finish', async () => {
-      // Make the file publicly accessible
-      await fileRef.makePublic();
+    try {
+      console.log('Starting Firebase upload for:', filename);
       
-      // Get the public URL
-      const publicUrl = `https://storage.googleapis.com/${bucket.name}/${fileRef.name}`;
-      resolve(publicUrl);
+      const fileBuffer = fs.readFileSync(file.filepath || file.path);
+      console.log('File buffer size:', fileBuffer.length);
+      
+      // Create a reference to the file in Firebase Storage
+      const fileRef = bucket.file(`profile_photos/${filename}`);
+      
+      // Create a write stream and upload the file
+      const blobStream = fileRef.createWriteStream({
+        metadata: {
+          contentType: file.mimetype || file.type,
+        },
+        resumable: false, // For simplicity, disable resumable uploads
+      });
+      
+      // Handle errors
+      blobStream.on('error', (error) => {
+        console.error('Firebase upload stream error:', error);
+        console.error('Error details:', {
+          message: error.message,
+          code: error.code,
+          status: error.status
+        });
+        reject(new Error(`Firebase upload failed: ${error.message}`));
+      });
+      
+      // Handle upload completion
+      blobStream.on('finish', async () => {
+        try {
+          console.log('Upload completed, making file public...');
+          
+          // Make the file publicly accessible
+          await fileRef.makePublic();
+          
+          // Get the public URL
+          const publicUrl = `https://storage.googleapis.com/${bucket.name}/${fileRef.name}`;
+          console.log('File made public, URL:', publicUrl);
+          
+          resolve(publicUrl);
+        } catch (publicError) {
+          console.error('Error making file public:', publicError);
+          reject(new Error(`Failed to make file public: ${publicError.message}`));
+        }
+      });
+      
+      // End the stream with the file buffer
+      blobStream.end(fileBuffer);
+      
+    } catch (error) {
+      console.error('Error in uploadFileToFirebase:', error);
+      reject(new Error(`Upload preparation failed: ${error.message}`));
+    }
+  });
+}
+
+// Handle JSON-based profile update (for base64 images)
+async function handleJsonProfileUpdate(req, res, session) {
+  try {
+    const { name, phone, avatar } = req.body;
+    
+    console.log('Handling JSON profile update:', { hasName: !!name, hasPhone: !!phone, hasAvatar: !!avatar });
+    
+    // Validate required fields
+    if (!name || !name.trim()) {
+      return res.status(400).json({ error: 'Name cannot be empty' });
+    }
+    
+    await connectMongoDB();
+    
+    const updateData = {
+      name: name.trim(),
+      phone: phone ? phone.trim() : '',
+    };
+    
+    // Handle avatar if provided
+    if (avatar) {
+      console.log('Processing avatar, size:', avatar.length);
+      
+      // Validate it's a proper base64 image
+      if (!avatar.startsWith('data:image/')) {
+        console.error('Invalid avatar format, does not start with data:image/');
+        return res.status(400).json({ error: 'Invalid image format. Please select a valid image file.' });
+      }
+      
+      // More lenient size check - allow up to 2MB for base64
+      const estimatedSize = avatar.length * (3/4);
+      if (estimatedSize > 2 * 1024 * 1024) { // 2MB limit
+        console.error('Avatar too large:', estimatedSize);
+        return res.status(400).json({ error: 'Image too large. Please use an image under 2MB.' });
+      }
+      
+      // Try to save to local file system as well for better performance
+      try {
+        // Extract the base64 data and file extension
+        const [header, base64Data] = avatar.split(';base64,');
+        const mimeType = header.replace('data:', '');
+        const extension = mimeType.split('/')[1] || 'jpg';
+        
+        // Create a unique filename
+        const filename = `${uuidv4()}.${extension}`;
+        const uploadsDir = path.join(process.cwd(), 'public', 'uploads', 'profile_photos');
+        
+        // Ensure upload directory exists
+        if (!fs.existsSync(uploadsDir)) {
+          fs.mkdirSync(uploadsDir, { recursive: true });
+          console.log('Created uploads directory:', uploadsDir);
+        }
+        
+        // Save the file
+        const filePath = path.join(uploadsDir, filename);
+        const buffer = Buffer.from(base64Data, 'base64');
+        fs.writeFileSync(filePath, buffer);
+        
+        // Use the local file URL instead of base64 for better performance
+        const localUrl = `/uploads/profile_photos/${filename}`;
+        updateData.avatar = localUrl;
+        console.log('Avatar saved locally:', localUrl);
+        
+      } catch (localSaveError) {
+        console.warn('Could not save avatar locally, using base64:', localSaveError.message);
+        // Fallback to base64 if local save fails
+        updateData.avatar = avatar;
+      }
+    }
+    
+    // Update the user profile in the database
+    const updatedUser = await User.findOneAndUpdate(
+      { email: session.user.email },
+      { $set: updateData },
+      { new: true }
+    );
+    
+    if (!updatedUser) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    
+    return res.status(200).json({
+      name: updatedUser.name,
+      email: updatedUser.email,
+      phone: updatedUser.phone || '',
+      avatar: updatedUser.avatar || '/images/default-avatar.svg',
+      joinDate: updatedUser.createdAt ? new Date(updatedUser.createdAt).toLocaleDateString() : 'N/A',
+      tokens: updatedUser.tokens || 0,
+      subscription: updatedUser.subscription,
     });
     
-    // End the stream with the file buffer
-    blobStream.end(fileBuffer);
+  } catch (error) {
+    console.error('Error in JSON profile update:', error);
+    return res.status(500).json({ error: 'Failed to update profile: ' + error.message });
+  }
+}
+
+// Handle form data profile update (for file uploads)
+async function handleFormDataProfileUpdate(req, res, session) {
+  // We need to temporarily disable body parser for this specific case
+  // This function will handle the old multipart form data approach
+  return res.status(400).json({ 
+    error: 'Form data uploads are currently disabled. Please use the base64 image upload method.' 
   });
 }
 
@@ -114,144 +268,25 @@ export default async function handler(req, res) {
     
     // Handle PUT request for profile updates
     if (req.method === 'PUT') {
-      // Create upload directory if it doesn't exist (still needed for temporary files)
-      const uploadDir = path.join(process.cwd(), 'public', 'uploads');
-      if (!fs.existsSync(uploadDir)) {
-        fs.mkdirSync(uploadDir, { recursive: true });
+      // Check if this is a JSON request (base64 image) or form data
+      const contentType = req.headers['content-type'] || '';
+      
+      console.log('PUT request received, content-type:', contentType);
+      console.log('Request body available:', !!req.body);
+      console.log('Request body keys:', req.body ? Object.keys(req.body) : 'undefined');
+      
+      if (contentType.includes('application/json')) {
+        // Handle JSON request with base64 image
+        if (!req.body) {
+          console.error('Request body is undefined for JSON request');
+          return res.status(400).json({ error: 'Request body is missing or malformed' });
+        }
+        return await handleJsonProfileUpdate(req, res, session);
+      } else {
+        // Handle multipart form data - we need to parse it manually
+        return await handleFormDataProfileUpdate(req, res, session);
       }
-
-      // Using a simpler version of formidable parsing to avoid compatibility issues
-      const form = new IncomingForm({ 
-        uploadDir: uploadDir,
-        keepExtensions: true,
-        maxFileSize: 5 * 1024 * 1024 // 5MB
-      });
-
-      try {
-        const [fields, files] = await new Promise((resolve, reject) => {
-          form.parse(req, (err, fields, files) => {
-            if (err) {
-              console.error('Formidable parse error:', err);
-              reject(err);
-            } else {
-              console.log('Form parsed successfully');
-              resolve([fields, files]);
-            }
-          });
-        });
-        
-        console.log('Received fields:', JSON.stringify(fields));
-        console.log('Received files keys:', Object.keys(files));
-        
-        await connectMongoDB();
-        
-        // Extract form field values, handling different formidable versions
-        const getName = () => {
-          if (fields.name) {
-            return Array.isArray(fields.name) ? fields.name[0] : fields.name;
-          }
-          return '';
-        };
-        
-        const getPhone = () => {
-          if (fields.phone) {
-            return Array.isArray(fields.phone) ? fields.phone[0] : fields.phone;
-          }
-          return '';
-        };
-        
-        // Prepare update data
-        const updateData = {
-          name: getName(),
-          phone: getPhone(),
-        };
-        
-        // Validate that name is not empty
-        if (!updateData.name) {
-          return res.status(400).json({ error: 'Name cannot be empty' });
-        }
-        
-        // Handle avatar upload if present
-        if (files && files.avatar) {
-          try {
-            // Access the file (compatible with different formidable versions)
-            const fileAvatar = Array.isArray(files.avatar) ? files.avatar[0] : files.avatar;
-            
-            // Log file details for debugging
-            console.log('File avatar details:', {
-              size: fileAvatar.size || 'unknown',
-              type: fileAvatar.mimetype || fileAvatar.type || 'unknown',
-              name: fileAvatar.originalFilename || fileAvatar.name || 'unknown',
-              path: fileAvatar.filepath || fileAvatar.path || 'unknown'
-            });
-            
-            // Get the file path (compatible with different formidable versions)
-            const filePath = fileAvatar.filepath || fileAvatar.path;
-            
-            if (!filePath || !fs.existsSync(filePath)) {
-              console.error('File path is invalid or does not exist:', filePath);
-              return res.status(500).json({ error: 'Invalid file path' });
-            }
-            
-            // Get original filename (compatible with different formidable versions)
-            const originalName = fileAvatar.originalFilename || fileAvatar.name || 'upload.jpg';
-            
-            // Generate unique filename with proper extension
-            const extension = path.extname(originalName) || '.jpg'; // Default to jpg if no extension
-            const filename = `${uuidv4()}${extension}`;
-            
-            // Upload file to Firebase Storage
-            const firebaseUrl = await uploadFileToFirebase(fileAvatar, filename);
-            console.log('File uploaded to Firebase:', firebaseUrl);
-            
-            // Set the avatar URL to the Firebase Storage URL
-            updateData.avatar = firebaseUrl;
-            
-            // Clean up the temp file if it still exists
-            try {
-              if (fs.existsSync(filePath)) {
-                fs.unlinkSync(filePath);
-              }
-            } catch (unlinkError) {
-              console.error('Error deleting temp file (non-critical):', unlinkError);
-              // Continue anyway as this isn't critical
-            }
-            
-          } catch (fileError) {
-            console.error("File handling error:", fileError);
-            return res.status(500).json({ error: 'Error processing image upload: ' + fileError.message });
-          }
-        } else {
-          console.log('No avatar file uploaded');
-        }
-        
-        console.log('Updating user with data:', updateData);
-        
-        // Update the user profile in the database
-        const updatedUser = await User.findOneAndUpdate(
-          { email: session.user.email },
-          { $set: updateData },
-          { new: true }
-        );
-        
-        if (!updatedUser) {
-          return res.status(404).json({ error: 'User not found' });
-        }
-        
-        return res.status(200).json({
-          name: updatedUser.name,
-          email: updatedUser.email,
-          phone: updatedUser.phone || '',
-          avatar: updatedUser.avatar || '/images/default-avatar.svg',
-          joinDate: updatedUser.createdAt ? new Date(updatedUser.createdAt).toLocaleDateString() : 'N/A',
-          tokens: updatedUser.tokens || 0,
-          subscription: updatedUser.subscription,
-        });
-      } catch (error) {
-        console.error('Error in profile update:', error);
-        return res.status(500).json({ error: 'Failed to update profile: ' + error.message });
       }
-    }
     
     // Handle other HTTP methods
     return res.status(405).json({ error: 'Method not allowed' });

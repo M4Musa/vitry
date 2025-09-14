@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { signIn } from 'next-auth/react'; // Import signIn from next-auth
+import { Eye, EyeOff } from 'lucide-react';
 import MagneticButton from '@/components/MagneticButton';
 
 export default function Login() {
@@ -21,6 +22,7 @@ export default function Login() {
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
   const [error, seterror] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
 
 
@@ -97,10 +99,17 @@ export default function Login() {
           <Image src="/vector_1.png" width={16} height={16} className={styles.inputIcon} alt="Password Icon" />
           <input 
             onChange={p => setpassword(p.target.value)}
-            type="password" 
+            type={showPassword ? "text" : "password"} 
             placeholder="Enter your password" 
             className={styles.input} 
           />
+          <button 
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className={styles.eyeButton}
+          >
+            {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+          </button>
         </div>
 
         <Link href="/forgotpassword" className={styles.forgotPassword}>

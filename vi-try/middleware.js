@@ -18,30 +18,38 @@ export default withAuth(
       authorized: ({ token, req }) => {
         const { pathname } = req.nextUrl;
         
-        // Only log in development
-        if (process.env.NODE_ENV === 'development') {
-          console.log(`[Auth Check] Path: ${pathname}, Has token: ${!!token}`);
+        try {
+          // Only log in development
+          if (process.env.NODE_ENV === 'development') {
+            console.log(`[Auth Check] Path: ${pathname}, Has token: ${!!token}`);
+          }
+          
+          // Allow access if user has a valid token
+          return !!token;
+        } catch (error) {
+          // Log error but don't crash
+          console.error('[Middleware Error]:', error);
+          return false; // Deny access on error
         }
-        
-        // Allow access if user has a valid token
-        return !!token;
       },
     },
     // Specify the pages configuration to match NextAuth config
     pages: {
-      signIn: '/welcome',
-      error: '/welcome',
+      signIn: '/login',
+      error: '/login',
     },
   }
 );
 
 export const config = {
   matcher: [
+    // Protected routes that require authentication
     "/clora/:path*",     // Virtual try-on functionality
     "/profile/:path*",   // User profile pages
     "/settings/:path*",  // User settings
     "/try-on/:path*",    // Try-on related pages
-    // Note: subscription, pricing, and product pages are intentionally left unprotected
-    // to allow users to browse and subscribe without authentication
+    "/subscription/:path*" // Subscription pages
+    // Note: We don't use negative lookahead matcher as it can cause issues in production
+    // Instead, we explicitly list routes that need protection
   ],
 };

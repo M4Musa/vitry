@@ -3,15 +3,19 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
+import { Eye, EyeOff } from 'lucide-react';
 
 export default function ResetPassword() {
   const router = useRouter();
   const { token } = router.query; // Get the token from the URL
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [verified, setVerified] = useState(false);
   const [user, setUser] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
   const { data: session } = useSession();
@@ -64,11 +68,14 @@ export default function ResetPassword() {
     setError("");
     setSuccess("");
 
-    if (!password) {
-      setError("Please enter a password!");
+    if (!password || !confirmPassword) {
+      setError("Please fill all password fields!");
       return;
+    }
 
-  
+    if (password !== confirmPassword) {
+      setError("Passwords do not match!");
+      return;
     }
 
     if (!passwordRegex.test(password)) {
@@ -140,15 +147,42 @@ export default function ResetPassword() {
           </div>
         )}
 
+        <p className={styles.text1}>New Password</p>
         <div className={styles.inputContainer}>
           <Image src="/vector_1.png" width={16} height={16} className={styles.inputIcon} alt="Password Icon" />
           <input
             onChange={(p) => setPassword(p.target.value)}
-            type="password"
-            placeholder="Enter your password"
+            type={showPassword ? "text" : "password"}
+            placeholder="Enter your new password"
             className={styles.input}
             value={password}
           />
+          <button 
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className={styles.eyeButton}
+          >
+            {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+          </button>
+        </div>
+
+        <p className={styles.text1}>Confirm Password</p>
+        <div className={styles.inputContainer}>
+          <Image src="/vector_1.png" width={16} height={16} className={styles.inputIcon} alt="Password Icon" />
+          <input
+            onChange={(p) => setConfirmPassword(p.target.value)}
+            type={showConfirmPassword ? "text" : "password"}
+            placeholder="Confirm your new password"
+            className={styles.input}
+            value={confirmPassword}
+          />
+          <button 
+            type="button"
+            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            className={styles.eyeButton}
+          >
+            {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+          </button>
         </div>
 
         <button  onClick={handleSubmit} className={styles.loginButton}>

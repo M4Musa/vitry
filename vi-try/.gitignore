@@ -34,3 +34,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# uploaded files
+/public/uploads/
+
+# Firebase service account (if added later)
+firebase-service-account.json

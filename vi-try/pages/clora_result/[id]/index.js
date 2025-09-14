@@ -6,6 +6,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { useRouter } from 'next/router';
 import useProducts from '@/hooks/useProducts';
+import { formatPricePkr } from '@/utils/currency';
 
 const CloraResult = () => {
   const router = useRouter();
@@ -179,7 +180,7 @@ const CloraResult = () => {
             <h1 className="text-xl sm:text-2xl font-bold mb-2 text-black line-clamp-2">{Product.product_name}</h1>
             
             <div className="flex items-center mb-4">
-              <span className="text-lg font-semibold text-black">${Product.price.toFixed(2)}</span>
+              <span className="text-lg font-semibold text-black">{formatPricePkr(Product.price)}</span>
             </div>
             
             <div className="mb-6 bg-gray-50 p-4 rounded-lg">

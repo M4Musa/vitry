@@ -14,10 +14,12 @@ import MagneticButton from "@/components/MagneticButton";
 import DoorHandle from "@/components/DoorHandle";
 import useProducts from '@/hooks/useProducts';
 import { useRouter } from "next/router";
+import { useSession } from 'next-auth/react';
 
 
 const Homepage = () => {
   const router = useRouter();
+  const { data: session, status } = useSession();
   const [doorOpen, setDoorOpen] = useState(false);
   const [scrollToCategory, setScrollToCategory] = useState(false);
   const containerRef = useRef(null);

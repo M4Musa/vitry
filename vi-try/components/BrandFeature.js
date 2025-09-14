@@ -6,10 +6,17 @@ import { useState, useEffect } from "react";
 import styles from "./BrandFeature.module.css";
 
 const BrandFeature = () => {
-  const { products } = useProducts();
+  const { products, loading, error } = useProducts();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(6);
   const [cardWidth, setCardWidth] = useState(100 / 6); // Default to 6 items
+
+  // Monitor products loading state
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'development') {
+      console.log('BrandFeature - Products:', products.length, 'Loading:', loading, 'Error:', error);
+    }
+  }, [products, loading, error]);
 
   // Update items per page based on screen width
   useEffect(() => {
@@ -55,6 +62,51 @@ const BrandFeature = () => {
 
   const visibleProducts = products.slice(currentIndex, currentIndex + itemsPerPage);
 
+  // Show loading state
+  if (loading) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.header}>
+          <h1 className={styles.title}>Brands</h1>
+          <div className={styles.divider}></div>
+        </div>
+        <div className="flex justify-center items-center py-8">
+          <p className="text-gray-600">Loading products...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.header}>
+          <h1 className={styles.title}>Brands</h1>
+          <div className={styles.divider}></div>
+        </div>
+        <div className="flex justify-center items-center py-8">
+          <p className="text-red-600">Error loading products: {error}</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show empty state
+  if (!products || products.length === 0) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.header}>
+          <h1 className={styles.title}>Brands</h1>
+          <div className={styles.divider}></div>
+        </div>
+        <div className="flex justify-center items-center py-8">
+          <p className="text-gray-600">No products available</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -78,24 +130,31 @@ const BrandFeature = () => {
               transform: `translateX(-${currentIndex * (100 / itemsPerPage)}%)`
             }}
           >
-            {products.map((product, index) => (
-              <div 
-                key={index} 
-                className={styles.productCard}
-                style={{ flexBasis: `${cardWidth}%`, maxWidth: `${cardWidth}%` }}
-              >
-                <ProductCard
-                  id= {product._id}
-                  imagePath={product.images[0]}
-                  itemName={product.product_name}
-                  brandName={product.brand}
-                  itemPrice={product.price}
-                  rating={4}
-                  sales={product.sku}
-                  
-                />
-              </div>
-            ))}
+            {products.map((product, index) => {
+              // Add safety checks for product data
+              if (!product || !product.images || !product.images[0]) {
+                console.warn('Invalid product data at index:', index, product);
+                return null;
+              }
+              
+              return (
+                <div 
+                  key={product._id || index} 
+                  className={styles.productCard}
+                  style={{ flexBasis: `${cardWidth}%`, maxWidth: `${cardWidth}%` }}
+                >
+                  <ProductCard
+                    id={product._id}
+                    imagePath={product.images[0]}
+                    itemName={product.product_name}
+                    brandName={product.brand}
+                    itemPrice={product.price}
+                    rating={4}
+                    sales={product.sku}
+                  />
+                </div>
+              );
+            })}
           </div>
         </div>
 

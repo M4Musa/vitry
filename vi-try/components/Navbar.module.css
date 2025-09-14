@@ -79,9 +79,111 @@
     color: rgb(127 29 29);
   }
   
+  /* Authentication Styles */
+  .authStatus {
+    color: rgb(127 29 29);
+    font-size: 0.875rem;
+    padding: 0.5rem;
+  }
+  
+  .userInfo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+  }
+  
+  .welcomeText {
+    color: rgb(127 29 29);
+    font-size: 0.75rem;
+    font-weight: 500;
+    max-width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .logoutButton {
+    background-color: #FF5E6C;
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 0.5rem;
+    font-size: 0.75rem;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .logoutButton:hover {
+    background-color: #E8516B;
+  }
+  
+  .authButtons {
+    display: flex;
+    gap: 0.5rem;
+    flex-direction: column;
+  }
+  
+  .loginButton, .registerButton {
+    padding: 0.25rem 0.75rem;
+    border-radius: 0.5rem;
+    font-size: 0.75rem;
+    text-decoration: none;
+    text-align: center;
+    transition: background-color 0.2s;
+  }
+  
+  .loginButton {
+    background-color: #4B003B;
+    color: white;
+  }
+  
+  .loginButton:hover {
+    background-color: #6B1A4D;
+  }
+  
+  .registerButton {
+    background-color: transparent;
+    color: #4B003B;
+    border: 1px solid #4B003B;
+  }
+  
+  .registerButton:hover {
+    background-color: #4B003B;
+    color: white;
+  }
+  
+  .sidebarUserInfo {
+    background-color: rgba(255, 94, 108, 0.1);
+    padding: 0.75rem;
+    border-radius: 0.75rem;
+    margin-bottom: 1rem;
+  }
+  
+  .userGreeting {
+    color: #4B003B;
+    font-weight: 600;
+    font-size: 0.875rem;
+    margin: 0;
+  }
+  
   @media (min-width: 768px) {
     .navText {
       display: block;
+    }
+    
+    .welcomeText {
+      font-size: 0.875rem;
+      max-width: 200px;
+    }
+    
+    .authButtons {
+      flex-direction: row;
+    }
+    
+    .loginButton, .registerButton {
+      font-size: 0.875rem;
+      padding: 0.5rem 1rem;
     }
   }
   
@@ -98,7 +200,7 @@
     position: fixed;
     inset: 0;
     z-index: 50;
-
+    background-color: rgba(0, 0, 0, 0.5);
   }
   
   .sidebar {

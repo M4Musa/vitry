@@ -144,20 +144,15 @@ const ProfilePage = () => {
     try {
       setUploadingImage(true);
       
-      // Create form data to handle file upload
-      const formData = new FormData();
-      formData.append('name', editedData.name.trim());
+      // Prepare JSON payload
+      const updateData = {
+        name: editedData.name.trim(),
+        phone: editedData.phone && editedData.phone.trim() ? editedData.phone.trim() : ''
+      };
       
-      // Only add phone if it exists and isn't just whitespace
-      if (editedData.phone && editedData.phone.trim()) {
-        formData.append('phone', editedData.phone.trim());
-      } else {
-        formData.append('phone', ''); // Send empty string if no phone
-      }
-      
-      // Handle avatar file if present
+      // Handle avatar file if present - convert to base64
       if (editedData.avatar) {
-        console.log('Adding avatar to form data:', {
+        console.log('Processing avatar for upload:', {
           name: editedData.avatar.name,
           type: editedData.avatar.type,
           size: editedData.avatar.size
@@ -170,24 +165,36 @@ const ProfilePage = () => {
           return;
         }
         
-        // Validate file size again just to be sure
-        if (editedData.avatar.size > 5 * 1024 * 1024) {
-          toast.error('Image is too large. Please select an image under 5MB');
+        // Validate file size (2MB limit for base64)
+        if (editedData.avatar.size > 2 * 1024 * 1024) {
+          toast.error('Image is too large. Please select an image under 2MB');
           setUploadingImage(false);
           return;
         }
         
-        formData.append('avatar', editedData.avatar);
+        // Convert file to base64
+        try {
+          const base64String = await convertFileToBase64(editedData.avatar);
+          updateData.avatar = base64String;
+        } catch (conversionError) {
+          console.error('Error converting image to base64:', conversionError);
+          toast.error('Failed to process image. Please try again.');
+          setUploadingImage(false);
+          return;
+        }
       }
       
-      // Log the form data for debugging
-      console.log('Form data keys:', [...formData.keys()]);
+      console.log('Sending update data (without full base64):', {
+        name: updateData.name,
+        phone: updateData.phone,
+        hasAvatar: !!updateData.avatar
+      });
       
       toast.loading('Updating profile...', { id: 'profile-update' });
       
-      const response = await axios.put('/api/user/profile', formData, {
+      const response = await axios.put('/api/user/profile', updateData, {
         headers: {
-          'Content-Type': 'multipart/form-data'
+          'Content-Type': 'application/json'
         }
       });
       
@@ -236,13 +243,29 @@ const ProfilePage = () => {
     setImagePreview(null);
   };
 
+  // Helper function to convert file to base64
+  const convertFileToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+      reader.readAsDataURL(file);
+    });
+  };
+
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     
     if (file) {
-      // Check file size (limit to 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        toast.error('Image is too large. Please select an image under 5MB.');
+      console.log('File selected:', {
+        name: file.name,
+        size: file.size,
+        type: file.type
+      });
+      
+      // Check file size (increased to 2MB to match API)
+      if (file.size > 2 * 1024 * 1024) {
+        toast.error('Image is too large. Please select an image under 2MB.');
         return;
       }
       
@@ -252,18 +275,32 @@ const ProfilePage = () => {
         return;
       }
       
+      // Check for supported formats
+      const supportedFormats = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
+      if (!supportedFormats.includes(file.type.toLowerCase())) {
+        toast.error('Please select a JPEG, PNG, WebP, or GIF image.');
+        return;
+      }
+      
       setEditedData({
         ...editedData,
         avatar: file
       });
       
-      // Create a preview URL
+      // Create a preview URL with better error handling
       const reader = new FileReader();
       reader.onloadend = () => {
+        console.log('Image preview created successfully');
         setImagePreview(reader.result);
       };
-      reader.onerror = () => {
+      reader.onerror = (error) => {
+        console.error('FileReader error:', error);
         toast.error('Error reading file. Please try another image.');
+        setImagePreview(null);
+        setEditedData({
+          ...editedData,
+          avatar: null
+        });
       };
       reader.readAsDataURL(file);
     }
