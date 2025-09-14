@@ -4,6 +4,7 @@ import { connectMongoDB } from '@/config/mongodb';
 import bcrypt from 'bcryptjs';
 import User from "@/models/user";
 
+// DEPLOYMENT SPECIALIST FIX: Optimized NextAuth for Vercel
 export const authOptions = {
   providers: [
     CredentialsProvider({
@@ -13,38 +14,82 @@ export const authOptions = {
         password: { label: "Password", type: "password" }
       },
       async authorize(credentials) {
-        await connectMongoDB(); 
+        try {
+          await connectMongoDB(); 
 
-        const user = await User.findOne({ email: credentials.email });
+          const user = await User.findOne({ email: credentials.email });
 
-        if (user && (await bcrypt.compare(credentials.password, user.password))) {
-          return { 
-            id: user._id.toString(), // Ensure ID is a string for better serialization
-            email: user.email, 
-            subscription: user.subscription, 
-            name: user.name 
-          };
-        } else {
-          throw new Error('Invalid email or password');
+          if (user && (await bcrypt.compare(credentials.password, user.password))) {
+            return { 
+              id: user._id.toString(), // Ensure ID is a string for serialization
+              email: user.email, 
+              subscription: user.subscription, 
+              name: user.name 
+            };
+          } else {
+            throw new Error('Invalid email or password');
+          }
+        } catch (error) {
+          console.error('Auth error:', error);
+          throw new Error('Authentication failed');
         }
       }
     }),
   ],
+  
+  // Critical: Explicit secret configuration for Vercel
   secret: process.env.NEXTAUTH_SECRET,
+  
+  // Custom pages
   pages: {
     signIn: '/login',
     error: '/login',
   },
+  
+  // Optimized session configuration for serverless
   session: {
     strategy: 'jwt',
     maxAge: 30 * 24 * 60 * 60, // 30 days
     updateAge: 24 * 60 * 60, // 24 hours
   },
-  // Enhanced JWT configuration for Vercel
+  
+  // Critical JWT configuration for Vercel Edge Runtime
   jwt: {
     maxAge: 30 * 24 * 60 * 60, // 30 days
-    // Ensure JWT secret is properly set
-    secret: process.env.NEXTAUTH_SECRET,
+    secret: process.env.NEXTAUTH_SECRET, // Explicit secret
+    // Ensure cookies work properly on Vercel
+    encode: async ({ secret, token }) => {
+      return require('jsonwebtoken').sign(token, secret, {
+        algorithm: 'HS256',
+        expiresIn: '30d'
+      });
+    },
+    decode: async ({ secret, token }) => {
+      try {
+        return require('jsonwebtoken').verify(token, secret, {
+          algorithms: ['HS256']
+        });
+      } catch (error) {
+        console.error('JWT decode error:', error);
+        return null;
+      }
+    },
+  },
+  
+  // Enhanced cookie configuration for Vercel
+  cookies: {
+    sessionToken: {
+      name: process.env.NODE_ENV === 'production' 
+        ? '__Secure-next-auth.session-token' 
+        : 'next-auth.session-token',
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 30 * 24 * 60 * 60, // 30 days
+      }
+    },
   },
   callbacks: {
     async jwt({ token, user, account }) {
