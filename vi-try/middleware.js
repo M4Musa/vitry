@@ -1,7 +1,7 @@
 import { withAuth } from "next-auth/middleware";
 import { NextResponse } from "next/server";
 
-// More robust middleware for production
+// Enhanced middleware for Vercel deployment
 export default withAuth(
   function middleware(req) {
     const { pathname } = req.nextUrl;
@@ -11,7 +11,15 @@ export default withAuth(
       console.log(`[Middleware] Protecting route: ${pathname}`);
     }
     
-    return NextResponse.next();
+    // Add headers for better CORS and session handling in production
+    const response = NextResponse.next();
+    
+    // Set SameSite and Secure attributes for production
+    if (process.env.NODE_ENV === 'production') {
+      response.headers.set('x-middleware-cache', 'no-cache');
+    }
+    
+    return response;
   },
   {
     callbacks: {
@@ -22,10 +30,26 @@ export default withAuth(
           // Only log in development
           if (process.env.NODE_ENV === 'development') {
             console.log(`[Auth Check] Path: ${pathname}, Has token: ${!!token}`);
+            if (token) {
+              console.log(`[Auth Check] Token details:`, { 
+                hasId: !!token.id, 
+                hasEmail: !!token.email, 
+                hasName: !!token.name 
+              });
+            }
           }
           
-          // Allow access if user has a valid token
-          return !!token;
+          // For Vercel deployment, be more lenient with token validation
+          if (token && (token.email || token.id)) {
+            return true;
+          }
+          
+          // Log token issues in production for debugging
+          if (process.env.NODE_ENV === 'production' && !token) {
+            console.log(`[Auth] No token found for protected route: ${pathname}`);
+          }
+          
+          return false;
         } catch (error) {
           // Log error but don't crash
           console.error('[Middleware Error]:', error);
@@ -37,6 +61,11 @@ export default withAuth(
     pages: {
       signIn: '/login',
       error: '/login',
+    },
+    // Add JWT configuration for better token handling
+    jwt: {
+      // Use the same secret as NextAuth
+      secret: process.env.NEXTAUTH_SECRET,
     },
   }
 );

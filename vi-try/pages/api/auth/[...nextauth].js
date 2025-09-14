@@ -18,7 +18,12 @@ export const authOptions = {
         const user = await User.findOne({ email: credentials.email });
 
         if (user && (await bcrypt.compare(credentials.password, user.password))) {
-          return { id: user._id, email: user.email, subscription: user.subscription, name: user.name };
+          return { 
+            id: user._id.toString(), // Ensure ID is a string for better serialization
+            email: user.email, 
+            subscription: user.subscription, 
+            name: user.name 
+          };
         } else {
           throw new Error('Invalid email or password');
         }
@@ -33,30 +38,79 @@ export const authOptions = {
   session: {
     strategy: 'jwt',
     maxAge: 30 * 24 * 60 * 60, // 30 days
+    updateAge: 24 * 60 * 60, // 24 hours
+  },
+  // Enhanced JWT configuration for Vercel
+  jwt: {
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+    // Ensure JWT secret is properly set
+    secret: process.env.NEXTAUTH_SECRET,
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, account }) {
+      // Log for debugging in development
+      if (process.env.NODE_ENV === 'development') {
+        console.log('JWT Callback - User:', !!user, 'Account:', !!account, 'Token exists:', !!token);
+      }
+      
       if (user) {
         token.id = user.id;
         token.email = user.email;
         token.subscription = user.subscription;
         token.name = user.name;
+        
+        if (process.env.NODE_ENV === 'development') {
+          console.log('JWT Callback - Setting token data:', { 
+            hasId: !!token.id, 
+            hasEmail: !!token.email,
+            hasName: !!token.name 
+          });
+        }
       }
       return token;
     },
     async session({ session, token }) {
-      session.user.id = token.id;
-      session.user.email = token.email;
-      session.user.subscription = token.subscription;
-      session.user.name = token.name;
+      // Ensure session has all required data
+      if (token) {
+        session.user.id = token.id;
+        session.user.email = token.email;
+        session.user.subscription = token.subscription;
+        session.user.name = token.name;
+        
+        if (process.env.NODE_ENV === 'development') {
+          console.log('Session Callback - Session user:', {
+            hasId: !!session.user.id,
+            hasEmail: !!session.user.email,
+            hasName: !!session.user.name
+          });
+        }
+      }
       return session;
     },
     async redirect({ url, baseUrl }) {
+      // Enhanced redirect handling for Vercel
+      const allowedOrigins = [
+        baseUrl,
+        process.env.NEXTAUTH_URL,
+        process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null,
+      ].filter(Boolean);
+      
       // Allows relative callback URLs
-      if (url.startsWith("/")) return `${baseUrl}${url}`
-      // Allows callback URLs on the same origin
-      else if (new URL(url).origin === baseUrl) return url
-      return baseUrl
+      if (url.startsWith("/")) {
+        return `${baseUrl}${url}`;
+      }
+      
+      // Check if URL is from allowed origins
+      try {
+        const urlOrigin = new URL(url).origin;
+        if (allowedOrigins.includes(urlOrigin)) {
+          return url;
+        }
+      } catch (e) {
+        // Invalid URL, fallback to baseUrl
+      }
+      
+      return baseUrl;
     }
   },
 };
