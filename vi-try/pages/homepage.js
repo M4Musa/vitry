@@ -12,7 +12,7 @@ import BrandFeature from "@/components/BrandFeature";
 import Footer from "@/components/Footer";
 import MagneticButton from "@/components/MagneticButton";
 import DoorHandle from "@/components/DoorHandle";
-import useProducts from './hooks/useProducts';
+import useProducts from '@/hooks/useProducts';
 import { useRouter } from "next/router";
 
 

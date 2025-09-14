@@ -5,7 +5,7 @@ import MagneticButton from '@/components/MagneticButton';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { useRouter } from 'next/router';
-import useProducts from '../../hooks/useProducts';
+import useProducts from '@/hooks/useProducts';
 
 const CloraResult = () => {
   const router = useRouter();

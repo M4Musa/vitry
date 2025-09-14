@@ -4,7 +4,7 @@ import { connectMongoDB } from '@/config/mongodb';
 import bcrypt from 'bcryptjs';
 import User from "@/models/user";
 
-export const handler = NextAuth({
+export const authOptions = {
   providers: [
     CredentialsProvider({
       name: 'Credentials',
@@ -35,19 +35,14 @@ export const handler = NextAuth({
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-
         token.id = user.id;
         token.email = user.email;
         token.subscription = user.subscription;
         token.name = user.name;
-
       }
       return token;
     },
     async session({ session, token }) {
-
-      session.user.id = token.id; 
-
       session.user.id = token.id;
       session.user.email = token.email;
       session.user.subscription = token.subscription;
@@ -56,9 +51,9 @@ export const handler = NextAuth({
       return session;
     }
   },
+};
 
-
-});
+export const handler = NextAuth(authOptions);
 
 
 export default handler;

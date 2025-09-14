@@ -1,7 +1,7 @@
 import { ArrowRight, ArrowLeft } from "lucide-react";
 import ProductCard from "./ProductCard";
 import MagneticButton from "./MagneticButton";
-import useProducts from "../pages/hooks/useProducts";
+import useProducts from "@/hooks/useProducts";
 import { useState, useEffect } from "react";
 import styles from "./BrandFeature.module.css";
 

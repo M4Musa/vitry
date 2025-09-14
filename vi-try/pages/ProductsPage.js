@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import useProducts from "./hooks/useProducts";
+import useProducts from "@/hooks/useProducts";
 import { ReactLenis } from "lenis/react";
 import { getSession, signIn } from "next-auth/react";
 import Webcam from "react-webcam";
