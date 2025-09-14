@@ -1,10 +1,8 @@
-// Temporary wrapper until @studio-freight/react-lenis is fully installed
 import React from 'react';
+import { ReactLenis } from 'lenis/react';
 
-export const ReactLenis = ({ children }) => {
-  return <>{children}</>;
-};
+export { ReactLenis };
 
 export default function LenisWrapper({ children }) {
-  return <>{children}</>;
-} 
+  return <ReactLenis root>{children}</ReactLenis>;
+}

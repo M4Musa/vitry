@@ -5,11 +5,12 @@ import { useRouter } from "next/router";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import useProducts from "./hooks/useProducts";
-import { ReactLenis } from "@studio-freight/react-lenis";
+import { ReactLenis } from "lenis/react";
 import { getSession, signIn } from "next-auth/react";
 import Webcam from "react-webcam";
 import TryOnModal from "@/components/TryOnModal";
 import MagneticButton from "@/components/MagneticButton";
+import Link from "next/link";
 
 // Added getServerSideProps for server-side rendering
 export async function getServerSideProps(context) {
@@ -226,11 +227,11 @@ const ProductsPage = ({ session, initialProducts }) => {
                   Sign In
                 </button>
                 <div className="mt-4 text-center">
-                  <a href="#" className="text-sm" style={{ color: "#4B003B" }}>Forgot password?</a>
+                  <Link href="/forgotpassword" className="text-sm" style={{ color: "#4B003B" }}>Forgot password?</Link>
                 </div>
                 <div className="mt-6 text-center">
                   <p className="text-sm text-gray-600">
-                    Don&apos;t have an account? <a href="#" style={{ color: "#4B003B" }}>Register</a>
+                    Don&apos;t have an account? <Link href="/Register" style={{ color: "#4B003B" }}>Register</Link>
                   </p>
                 </div>
               </form>
