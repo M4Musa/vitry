@@ -141,7 +141,7 @@ export default function ResetPassword() {
         )}
 
         <div className={styles.inputContainer}>
-          <img src="/vector_1.png" className={styles.inputIcon} alt="Password Icon" />
+          <Image src="/vector_1.png" width={16} height={16} className={styles.inputIcon} alt="Password Icon" />
           <input
             onChange={(p) => setPassword(p.target.value)}
             type="password"

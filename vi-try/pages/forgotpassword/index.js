@@ -3,18 +3,18 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import Link from 'next/link'; 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { signIn } from 'next-auth/react'; // Import signIn from next-auth
 
 export default function ForgotPassword() {
-
-
   const router = useRouter();
-  const { data: session } = useSession(); 
+  const { data: session, status } = useSession(); 
 
-  if (session) {
-    router.push('/homepage');
-  }
+  useEffect(() => {
+    if (status === 'authenticated' && session) {
+      router.replace('/homepage');
+    }
+  }, [session, status, router]);
 
 
   const [email, setemail] = useState("");
@@ -97,7 +97,7 @@ export default function ForgotPassword() {
 
         <p className={styles.text1}>Email</p>
         <div className={styles.inputContainer}>
-          <img src="/vector.png" className={styles.inputIcon} alt="Email Icon" />
+          <Image src="/Vector.png" width={16} height={16} className={styles.inputIcon} alt="Email Icon" />
           <input 
             onChange={e => setemail(e.target.value)}
             type="text" 

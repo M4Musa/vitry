@@ -1,5 +1,5 @@
 export{default} from "next-auth/middleware";
 
 export const config = {
-    matcher: ["/homepage", "/clora","/pricing","/subscription","/ProductsPage","/clora_result/:path*","/ContactUs","/AboutUs"], 
+    matcher: ["/clora"], // Only protect try-on functionality
   };

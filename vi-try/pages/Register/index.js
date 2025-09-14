@@ -4,18 +4,17 @@ import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link'; 
 import { useRouter } from 'next/router';
-import { useState } from 'react';
-
-
+import { useState, useEffect } from 'react';
 
 export default function Register() {
-
   const router = useRouter();
-  const { data: session } = useSession(); 
+  const { data: session, status } = useSession(); 
 
-  if (session) {
-    router.push('/homepage');
-  }
+  useEffect(() => {
+    if (status === 'authenticated' && session) {
+      router.replace('/homepage');
+    }
+  }, [session, status, router]);
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -126,7 +125,7 @@ export default function Register() {
 
         <p className={styles.text1}>Email</p>
         <div className={styles.inputContainer}>
-          <img src="/vector_2.png" className={styles.inputIcon} alt="Email Icon" />
+          <Image src="/Vector_2.png" width={16} height={16} className={styles.inputIcon} alt="Email Icon" />
           <input 
             onChange={e => setEmail(e.target.value)}
             type="text" 
@@ -138,7 +137,7 @@ export default function Register() {
 
         <p className={styles.text2}>Your Name</p>
         <div className={styles.inputContainer}>
-          <img src="/vector_3.png" className={styles.inputIcon} alt="Name Icon" />
+          <Image src="/Vector_3.png" width={16} height={16} className={styles.inputIcon} alt="Name Icon" />
           <input 
             onChange={n => setName(n.target.value)}
             type="text" 
@@ -150,7 +149,7 @@ export default function Register() {
 
         <p className={styles.text2}>Your Password</p>
         <div className={styles.inputContainer}>
-          <img src="/vector_1.png" className={styles.inputIcon} alt="Password Icon" />
+          <Image src="/vector_1.png" width={16} height={16} className={styles.inputIcon} alt="Password Icon" />
           <input 
             onChange={p => setPassword(p.target.value)}
             type="password" 

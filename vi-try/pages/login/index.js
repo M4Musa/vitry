@@ -2,20 +2,20 @@ import styles from '../../styles/login.module.css';
 import { useSession } from 'next-auth/react'; 
 import Image from 'next/image';
 import Link from 'next/link'; 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { signIn } from 'next-auth/react'; // Import signIn from next-auth
 import MagneticButton from '@/components/MagneticButton';
 
 export default function Login() {
-
   const router = useRouter();
+  const { data: session, status } = useSession(); 
 
-  const { data: session } = useSession(); 
-
-  if (session) {
-    router.push('/homepage');
-  }
+  useEffect(() => {
+    if (status === 'authenticated' && session) {
+      router.replace('/homepage');
+    }
+  }, [session, status, router]);
 
 
   const [email, setemail] = useState("");
@@ -83,7 +83,7 @@ export default function Login() {
 
         <p className={styles.text1}>Email</p>
         <div className={styles.inputContainer}>
-          <img src="/vector.png" className={styles.inputIcon} alt="Email Icon" />
+          <Image src="/Vector.png" width={16} height={16} className={styles.inputIcon} alt="Email Icon" />
           <input 
             onChange={e => setemail(e.target.value)}
             type="text" 
@@ -94,7 +94,7 @@ export default function Login() {
 
         <p className={styles.text1}>Your Password</p>
         <div className={styles.inputContainer}>
-          <img src="/vector_1.png" className={styles.inputIcon} alt="Password Icon" />
+          <Image src="/vector_1.png" width={16} height={16} className={styles.inputIcon} alt="Password Icon" />
           <input 
             onChange={p => setpassword(p.target.value)}
             type="password" 
@@ -113,7 +113,7 @@ export default function Login() {
 
         <MagneticButton customStyle={true} customClass={styles.googleButton} className={styles.googleButton}>
           <Image
-            src="/logo.png" 
+            src="/Logo.png" 
             alt="Google Logo"
             width={20} 
             height={20} 
