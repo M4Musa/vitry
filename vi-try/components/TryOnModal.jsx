@@ -329,7 +329,7 @@ const TryOnModal = ({ productImage, onClose }) => {
               <div className="text-gray-400 text-sm">No product selected</div>
             )}
           </div>
-          <p className="text-xs text-gray-500 mt-2 text-center">The item you'll be trying on virtually</p>
+          <p className="text-xs text-gray-500 mt-2 text-center">The item you&apos;ll be trying on virtually</p>
         </div>
 
         {/* Right side - Main content */}

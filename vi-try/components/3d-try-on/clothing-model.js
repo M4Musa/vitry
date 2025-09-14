@@ -14,18 +14,8 @@ export default function ClothingModel({ pose }) {
     }
   );
 
-  if (loadError) {
-    console.error('Model load error:', loadError);
-    return null;
-  }
-
-  if (!nodes?.Sketchfab_model) {
-    console.error('Invalid model structure:', nodes);
-    return null;
-  }
-
   useFrame(() => {
-    if (!pose || !group.current) return;
+    if (!pose || !group.current || loadError || !nodes?.Sketchfab_model) return;
 
     // Adjust scale and position
     const scaleFactor = 0.05; // Further reduce this if needed
@@ -35,6 +25,16 @@ export default function ClothingModel({ pose }) {
     console.log('Current Scale:', group.current.scale);
     console.log('Current Position:', group.current.position);
   });
+
+  if (loadError) {
+    console.error('Model load error:', loadError);
+    return null;
+  }
+
+  if (!nodes?.Sketchfab_model) {
+    console.error('Invalid model structure:', nodes);
+    return null;
+  }
 
   return (
     <group ref={group}>

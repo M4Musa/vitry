@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { signIn } from 'next-auth/react'; // Import signIn from next-auth
 
-export default function forgotpassword() {
+export default function ForgotPassword() {
 
 
   const router = useRouter();

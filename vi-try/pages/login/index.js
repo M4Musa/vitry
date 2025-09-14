@@ -123,7 +123,7 @@ export default function Login() {
         </MagneticButton>
 
         <p className={styles.register}>
-          Don't have an account? 
+          Don&apos;t have an account? 
           <Link href="/Register">
             <span className={styles.reg}>Register</span>
           </Link>

@@ -361,7 +361,7 @@ const WebcamCapture = ({ onCapture, openGallery, onCameraNotSupported }) => {
         
         {/* Additional help text */}
         <div className="mt-4 text-xs text-gray-500 max-w-xs mx-auto">
-          <p>If permission dialog doesn't appear:</p>
+          <p>If permission dialog doesn&apos;t appear:</p>
           <ul className="text-left mt-1 list-disc pl-5">
             <li>Ensure your browser has camera permissions enabled in settings</li>
             <li>Try using a different browser</li>

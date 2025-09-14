@@ -220,7 +220,7 @@ const CloraResult = () => {
             
             <div className="flex flex-wrap gap-3 mb-5">
               <div className="flex-grow sm:flex-grow-0">
-              <MagneticButton children={"Virtual Try On"} onClick={() => handleOnClick(Product._id)} />
+              <MagneticButton onClick={() => handleOnClick(Product._id)}>Virtual Try On</MagneticButton>
               </div>
               <button className="border border-black p-3 rounded-md flex items-center justify-center hover:bg-gray-100 transition-colors">
                 <Heart className="h-5 w-5" stroke="black" />
@@ -228,7 +228,7 @@ const CloraResult = () => {
             </div>
             
             <div className="mb-5">
-              <MagneticButton children={"Buy Now"} onClick={handleBuyNow}/>
+              <MagneticButton onClick={handleBuyNow}>Buy Now</MagneticButton>
             </div>
 
             {/* Recommended Products */}

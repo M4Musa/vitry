@@ -161,7 +161,7 @@ const AvaResult = () => {
           </div>
           {/* Action buttons */}
           <div className="flex space-x-2 mb-4">
-            <MagneticButton children={"Virtual Try ON"} onClick={handleonclick}/>
+            <MagneticButton onClick={handleonclick}>Virtual Try ON</MagneticButton>
             <button className="border border-black px-4 py-2 rounded flex items-center justify-center">
               <Heart className="h-4 w-4" stroke="black" />
             </button>

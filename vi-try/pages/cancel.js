@@ -110,7 +110,7 @@ export default function SubscriptionCancel() {
           marginBottom: "30px",
           lineHeight: "1.6"
         }}>
-          Your {subscriptionDetails?.name} subscription has been successfully cancelled. We're sorry to see you go!
+          Your {subscriptionDetails?.name} subscription has been successfully cancelled. We&apos;re sorry to see you go!
         </p>
         
         <div style={{
@@ -157,7 +157,7 @@ export default function SubscriptionCancel() {
             marginBottom: "10px",
             color: "#f0f"
           }}>
-            We'd love to know why you're leaving
+            We&apos;d love to know why you&apos;re leaving
           </h3>
           <p style={{
             fontSize: "14px",

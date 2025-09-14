@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSession, signOut } from "next-auth/react";
 import { getServerSession } from "next-auth/next";
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Navbar from '@/components/Navbar';
@@ -397,7 +398,7 @@ const SubscriptionPage = ({ initialSubscription }) => {
               Please visit our pricing page to choose a plan that fits your needs.
             </p>
             
-            <a 
+            <Link 
               href="/pricing" 
               style={{
                 display: "inline-block",
@@ -414,7 +415,7 @@ const SubscriptionPage = ({ initialSubscription }) => {
               onMouseOut={(e) => e.currentTarget.style.backgroundColor = "#4B003B"}
             >
               View Pricing Plans
-            </a>
+            </Link>
           </div>
         </div>
       </div>
