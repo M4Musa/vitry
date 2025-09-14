@@ -110,7 +110,7 @@ export default function SubscriptionCancel() {
           marginBottom: "30px",
           lineHeight: "1.6"
         }}>
-          Your {subscriptionDetails?.name} subscription has been successfully cancelled. We&apos;re sorry to see you go!
+          Your {subscriptionDetails?.name} subscription has been successfully cancelled. We are sorry to see you go!
         </p>
         
         <div style={{

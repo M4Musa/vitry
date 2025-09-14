@@ -98,7 +98,7 @@ export default function Contact() {
             <div className={styles.content}>
               <h1 className={styles.title}>Contact Us</h1>
               <p className={styles.description}>
-                Have questions or feedback? Reach out to us, and we&apos;ll get back to you soon!
+                Have questions or feedback? Reach out to us, and well get back to you soon!
               </p>
               
               {error && (
