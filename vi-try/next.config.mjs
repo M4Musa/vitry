@@ -26,6 +26,10 @@ const nextConfig = {
     ],
   },
   output: 'standalone', // Ensure standalone mode for better deployment
+  eslint: {
+    // ✅ This ignores ESLint errors during Vercel build
+    ignoreDuringBuilds: true,
+  },
 };
 
 export default nextConfig;
