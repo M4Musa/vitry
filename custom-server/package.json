@@ -1,0 +1,32 @@
+{
+    "name": "custom-server",
+    "version": "1.0.0",
+    "description": "",
+    "main": "src/index.js",
+    "scripts": {
+        "start": "node src/index.js",
+        "dev": "nodemon src/index.js"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@tensorflow-models/coco-ssd": "^2.2.3",
+        "@tensorflow-models/mobilenet": "^2.1.1",
+        "@tensorflow/tfjs": "^4.22.0",
+        "@tensorflow/tfjs-node": "^4.22.0",
+        "body-parser": "^1.20.3",
+        "canvas": "^2.11.2",
+        "cors": "^2.8.5",
+        "dotenv": "^16.4.5",
+        "express": "^4.21.2",
+        "firebase": "^10.14.1",
+        "mongodb": "^6.9.0",
+        "mongoose": "^8.7.1",
+        "multer": "^1.4.5-lts.1",
+        "sharp": "^0.33.5"
+    },
+    "devDependencies": {
+        "nodemon": "^3.1.7"
+    }
+}

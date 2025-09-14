@@ -1,0 +1,190 @@
+/* Navbar.module.css */
+
+.container {
+    z-index: 50;
+  }
+  
+  .banner {
+    width: 100%;
+    height: 0.25rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgb(254 202 202);
+    padding: 1rem;
+  }
+  
+  .bannerItem {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .bannerText {
+    color: black;
+    font-size: 0.75rem;
+  }
+  
+  @media (min-width: 768px) {
+    .bannerText {
+      font-size: 0.875rem;
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .bannerText {
+      font-size: 1rem;
+    }
+  }
+  
+  .navbar {
+    background-color: rgb(255 237 213);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem;
+  }
+  
+  .logoContainer {
+    flex: 1;
+    display: flex;
+    align-items: center;
+  }
+  
+  .navLinks {
+    display: flex;
+    margin-left: 1rem;
+    gap: 2rem;
+  }
+  
+  .icon {
+    width: 24px;  /* Adjust width */
+    height: 24px; /* Adjust height */
+  }
+  
+  .navLink {
+    display: flex;
+    align-items: center;
+  }
+  
+  .icon {
+    height: 1.75rem;
+    width: 1.75rem;
+    color: rgb(127 29 29);
+    background-color: rgb(255 237 213);
+  }
+  
+  .navText {
+    display: none;
+    color: rgb(127 29 29);
+  }
+  
+  @media (min-width: 768px) {
+    .navText {
+      display: block;
+    }
+  }
+  
+  .toggleButton {
+    background-color: rgb(209 213 219);
+    border-radius: 0.5rem;
+    margin-left: 0.5rem;
+    color: black;
+    display: flex;
+    align-items: center;
+  }
+  
+  .sidebarOverlay {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+
+  }
+  
+  .sidebar {
+    top: 0;
+    right: 0;
+    height: 100vh; /* Ensure it fits the full screen height */
+    max-height: 100vh; /* Prevent overflow */
+    position: fixed;
+    z-index: 999;
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.2);
+    width: 16rem;
+    padding: 2rem;
+    border-radius: 2rem;
+    text-align: center;
+    padding: 1.5rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    border-left: 1px solid rgb(229 231 235);
+    transition: transform 1s, background-color 1s ease-in-out;
+    overflow-y: auto; /* Enable scrolling if content overflows */
+}
+
+  
+  .sidebarTitle {
+    text-align: left;
+    top : 5px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+    color: #FF5E6C;
+  }
+  
+  .sidebarList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .sidebarItem {
+    padding: 0.5rem;
+    border-radius: 0.75rem;
+    cursor: pointer;
+    color: #4B003B;
+    font-weight: 500;
+
+    
+
+  }
+  
+  .sidebarItem:hover {
+    background-color: rgb(254 202 202);
+  }
+  
+  .closeButton:hover {
+  background-color: #9b0079;
+
+  }
+
+  .closeButton {
+    margin-top: 1.5rem;
+    align-items: center;
+    justify-content: center;
+    background-color: #4B003B;
+    color: white;
+    padding: 0.5rem;
+    border-radius: 0.75rem;
+    width: 100%;
+    transition: transform 0.3s, background-color 0.2s ease-in-out;
+  }
+
+
+  @media(max-width :400px){
+.sidebar{
+    width: 100%px;
+}
+}
+@media (max-width: 768px) {
+  .sidebar {
+    width: 80vw; /* Make it take up a larger portion of the screen */
+  }
+}
+
+@media (max-width: 480px) {
+  .sidebar {
+    width: 100%; /* Full width on very small screens */
+    border-radius: 0; /* Remove border-radius to fit properly */
+  }
+}

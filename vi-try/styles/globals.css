@@ -1,0 +1,46 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+.mirror {
+  transform: scaleX(-1);
+}
+
+.sticky {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  transition: all 0.3s ease-in-out;
+}
+.content-wrapper {
+  opacity: 0; /* Start hidden */
+  animation: fadeIn 0.6s ease-in-out forwards;
+}
+
+/* Fade in from 0 to 1 */
+@keyframes fadeIn {
+  to { opacity: 1; }
+}

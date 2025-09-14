@@ -1,0 +1,205 @@
+.container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  padding: 2rem 1rem;
+}
+
+.imageContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.image {
+  object-fit: cover;
+}
+
+.overlay {
+  position: relative;
+  width: min(90%, 450px);
+  max-height: calc(100vh - 4rem);
+  background: rgba(255, 255, 255, 0.75);
+  border-radius: 2rem;
+  padding: 3.5rem 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  z-index: 1;
+  margin-top: 2.5rem;
+}
+
+.logoContainer {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -40%);
+  width: 100px;
+  height: 100px;
+  background: #4B003B;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+}
+
+.logo {
+  border-radius: 20%;
+  object-fit: contain;
+}
+
+.Register {
+  font-size: clamp(1.25rem, 3vw, 1.75rem);
+  font-weight: bold;
+  color: #FF5E6C;
+  align-self: flex-start;
+  margin-left: 5%;
+}
+
+.text, .text1, .text2 {
+  font-size: clamp(0.875rem, 1.5vw, 1rem);
+  font-weight: bold;
+  color: #000000;
+  align-self: flex-start;
+  margin-left: 5%;
+  width: 90%;
+}
+
+.highlight, .highlight1 {
+  color: inherit;
+}
+
+.error {
+  width: 90%;
+  color: #4B003B;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid #4B003B;
+  padding: 0.75rem;
+  border-radius: 15px;
+  font-size: 0.875rem;
+  font-weight: bold;
+}
+
+.erroricon {
+  margin-right: 0.5rem;
+  vertical-align: middle;
+}
+
+.inputContainer {
+  position: relative;
+  width: 90%;
+  height: 45px;
+  margin-bottom: 0.75rem;
+}
+
+.inputIcon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1.25rem;
+  height: 1.25rem;
+  z-index: 2;
+}
+
+.input {
+  width: 100%;
+  height: 100%;
+  padding: 0 1rem 0 3rem;
+  border: 2px solid #FF5E6C;
+  border-radius: 1rem;
+  font-size: 0.875rem;
+  background: transparent;
+  color: black;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #FF5E6C;
+}
+
+.RegisterButton {
+  width: 90%;
+  height: 45px;
+  background-color: #FF5E6C;
+  color: white;
+  border: none;
+  border-radius: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 0.5rem 0;
+}
+
+.register {
+  color: #000000;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+
+.reg {
+  color: #4B003B;
+  font-weight: bold;
+  text-decoration: underline;
+  cursor: pointer;
+  margin-left: 0.5rem;
+}
+
+@media screen and (max-height: 700px) {
+  .container {
+    padding: 1.5rem 1rem;
+  }
+
+  .overlay {
+    padding: 3rem 1.5rem 1rem;
+    margin-top: 2rem;
+    gap: 0.3rem;
+  }
+
+  .logoContainer {
+    width: 80px;
+    height: 80px;
+    transform: translate(-50%, -35%);
+  }
+
+  .inputContainer {
+    height: 40px;
+    margin-bottom: 0.5rem;
+  }
+
+  .RegisterButton {
+    height: 40px;
+  }
+}
+
+@media screen and (max-height: 500px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .overlay {
+    padding: 2.5rem 1rem 1rem;
+    margin-top: 1.5rem;
+    gap: 0.25rem;
+  }
+
+  .logoContainer {
+    width: 70px;
+    height: 70px;
+    transform: translate(-50%, -30%);
+  }
+}
+
+@media screen and (min-width: 1600px) {
+  .overlay {
+    max-width: 500px;
+  }
+}

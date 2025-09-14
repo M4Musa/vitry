@@ -1,0 +1,101 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: url('/background.png');
+    background-size: cover;
+    color: #4B003B;
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .content {
+    position: absolute; 
+    top: 50%; 
+    left: 50%; 
+    transform: translate(-50%, -50%); 
+    max-width: 450px; /* Limit maximum width to 450px */
+    width: 90%; 
+    height: auto; 
+    background: rgba(255, 255, 255, 0.6); 
+    padding: 2rem; /* Responsive padding */
+    border-radius: 2rem; /* Responsive border radius */
+    text-align: center; 
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center; 
+    font-size: 1rem; /* Base font size */
+    font-weight: bold;
+  }
+  
+  .title {
+    font-size: 5rem;
+    margin: 0;
+  }
+  
+  .subtitle {
+    font-size: 1.2rem;
+    margin: 10px 0;
+    color: #4B003B;
+  }
+  
+  .description {
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+    color: #4B003B;
+  }
+  
+  .buttons {
+    
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+  
+  .button {
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    background-color: #4B003B; 
+    color: white; 
+    padding: 0.625rem 1.25rem; /* Responsive padding */
+    border: none; 
+    border-radius: 1rem; /* Responsive border radius */
+    cursor: pointer; 
+    margin: 0.625rem 0; /* Responsive margin */
+    width: 100%; 
+    max-width: 350px; 
+    height: 55px;
+    font-weight: bold; 
+    transition: transform 0.3s, background-color 0.2s ease-in-out;
+  }
+  
+  .button:hover {
+    background: #9b0079;
+  }
+  
+  .secondary {
+    background: #4B003B;
+  }
+  
+  .secondary:hover {
+    background: #4B003B;
+  }
+  
+  .title {
+    font-size: 8rem; /* Large font size for prominence */
+    font-weight: 800; /* Extra bold for impact */
+    background: linear-gradient(45deg, #4B003B, #ff6b6b, #9b0079); /* Gradient color effect */
+    -webkit-background-clip: text; /* Webkit support for background-clip */
+    background-clip: text; /* Standard background-clip property */
+    -webkit-text-fill-color: transparent; /* Make the gradient visible */
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Add a soft shadow for depth */
+    letter-spacing: 0.2rem; /* Slightly increase the spacing between letters */
+    text-align: center; /* Center the text */
+    margin: 20px 0; /* Add spacing around the title */
+    line-height: 1; /* Keep the text compact */
+  }
+  

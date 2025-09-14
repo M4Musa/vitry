@@ -1,0 +1,28 @@
+.magneticButton {
+
+  width: 82%;  /*Fills 96% of the container */
+  background-color: #4B003B;
+  display: flex;
+  padding: 12px 24px;
+  justify-content: center;
+  align-items: center;
+  gap: 9px;
+  font-size: 1em;
+  font-family: 'Yu Gothic';
+  border-radius: 24px;
+  cursor: pointer;
+  color: white;
+  transition: transform 0.2s, background-color 0.3s ease; /* Combine transitions */
+  white-space: nowrap; /* Ensures text stays on a single line */
+  overflow: hidden; /* Hides any overflowing text */
+  text-overflow: ellipsis; /* Displays an ellipsis (...) for truncated text */
+  
+}
+  .magneticButton:hover {
+    background-color: #9b0079;
+  }
+
+  .magneticButton:active{
+    outline: 2px solid #4B003B;
+    background-color: #FF5E6C; 
+  }

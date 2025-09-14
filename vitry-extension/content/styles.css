@@ -1,0 +1,10 @@
+.try-on-button {
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    transition: background-color 0.2s ease;
+  }
+  
+  .try-on-button:hover {
+    background-color: #FF6347;
+  }
+  

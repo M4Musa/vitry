@@ -1,0 +1,231 @@
+.container {
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+.imageContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.image {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
+  position: absolute !important;
+}
+
+.overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 450px;
+  width: 90%;
+  background: rgba(255, 255, 255, 0.75);
+  padding: 1.25rem;
+  border-radius: 30px;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.logoContainer {
+  width: 100px;
+  height: 100px;
+  background: #4B003B;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.logo {
+  width: 80% !important;
+  height: 80% !important;
+  object-fit: contain;
+  position: relative !important;
+}
+
+.welcome {
+  font-size: 1.75rem;
+  font-weight: bold;
+  color: #4B003B;
+  margin: 0.25rem 0;
+  align-self: flex-start;
+}
+
+.welcome1 {
+  font-size: 1.1rem;
+  font-weight: 550;
+  color: #000000;
+  margin: 0.25rem 0;
+  align-self: flex-start;
+}
+
+.welcome2 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #000000;
+  margin: 0.25rem 0;
+  align-self: flex-start;
+}
+
+.life {
+  display: block;
+  font-weight: 550;
+  margin-bottom: 0.75rem;
+}
+
+.text1 {
+  font-size: 1rem;
+  font-weight: 550;
+  color: #000000;
+  margin-bottom: 0.75rem;
+  align-self: flex-start;
+}
+
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  outline: 2px solid black;
+  color: black;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+  margin: 0.5rem 0;
+  width: 100%;
+  height: 40px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.icon, .icon1 {
+  width: 20px !important;
+  height: 20px !important;
+  object-fit: contain;
+  position: relative !important;
+}
+
+.icon {
+  margin-right: 10px;
+}
+
+.icon1 {
+  margin-left: 10px;
+}
+
+.button:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.text {
+  font-size: 0.9rem;
+  color: #000000;
+  margin: 0.5rem 0;
+  font-weight: 300;
+}
+
+.text2 {
+  color: #4B003B;
+  font-weight: bold;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+@media (max-height: 600px) {
+  .overlay {
+    padding: 1rem;
+  }
+
+  .logoContainer {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 0.75rem;
+  }
+
+  .welcome {
+    font-size: 1.5rem;
+  }
+
+  .welcome1 {
+    font-size: 1rem;
+  }
+
+  .welcome2 {
+    font-size: 0.85rem;
+  }
+
+  .button {
+    height: 35px;
+    margin: 0.35rem 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .overlay {
+    padding: 1rem;
+  }
+
+  .logoContainer {
+    width: 80px;
+    height: 80px;
+  }
+
+  .welcome {
+    font-size: 1.5rem;
+  }
+
+  .welcome1 {
+    font-size: 1rem;
+  }
+
+  .welcome2 {
+    font-size: 0.85rem;
+  }
+
+  .button {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 320px) {
+  .overlay {
+    padding: 0.75rem;
+  }
+
+  .logoContainer {
+    width: 70px;
+    height: 70px;
+  }
+
+  .welcome {
+    font-size: 1.25rem;
+  }
+
+  .welcome1 {
+    font-size: 0.9rem;
+  }
+
+  .welcome2 {
+    font-size: 0.8rem;
+  }
+
+  .button {
+    height: 32px;
+    font-size: 0.8rem;
+    padding: 0.4rem 0.8rem;
+  }
+}
