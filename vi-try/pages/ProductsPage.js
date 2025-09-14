@@ -15,24 +15,12 @@ import MagneticButton from "@/components/MagneticButton";
 export async function getServerSideProps(context) {
   const session = await getSession(context);
   
-  // You can fetch initial products data here if needed
-  // For true server-side rendering, we should fetch products on the server
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
-  let initialProducts = [];
-  
-  try {
-    const res = await fetch(`${apiUrl}/api/products`);
-    if (res.ok) {
-      initialProducts = await res.json();
-    }
-  } catch (error) {
-    console.error("Failed to fetch products:", error);
-  }
-  
+  // Skip server-side product fetching to avoid build-time issues
+  // Products will be fetched client-side instead
   return {
     props: {
       session,
-      initialProducts: initialProducts || []
+      initialProducts: []
     }
   };
 }

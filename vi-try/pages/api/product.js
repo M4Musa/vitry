@@ -1,6 +1,6 @@
 import products from "@/models/products";
 import { connectMongoDB } from '@/config/mongodb';
-import { categorizeProducts, extractKeywords, categorizeProduct } from '@/utils/categorizeProducts';
+const { categorizeProducts, extractKeywords, categorizeProduct } = require('@/utils/categorizeProducts');
 
 
 export default async function handler(req, res) {

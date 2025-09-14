@@ -1,13 +1,14 @@
 import products from "@/models/products";
 import { connectMongoDB } from '@/config/mongodb';
-import { categorizeProducts, extractKeywords, categorizeProduct } from '@/utils/categorizeProducts';
+const { categorizeProducts, extractKeywords, categorizeProduct } = require('@/utils/categorizeProducts');
 
 export default async function handler(req, res) {
-  await connectMongoDB();
-
   if (req.method === 'GET') {
     try {
-      const Products = await products.find(); 
+      // Connect to MongoDB
+      await connectMongoDB();
+      
+      const Products = await products.find();
 
       // Process products for categorization
       const processedProducts = Products.map(product => {
@@ -36,6 +37,13 @@ export default async function handler(req, res) {
       return res.status(200).json(processedProducts);
     } catch (error) {
       console.error('Error fetching products:', error);
+      
+      // Return empty array instead of error to prevent frontend crashes
+      if (error.message.includes('timeout') || error.message.includes('connection')) {
+        console.log('Database connection failed, returning empty products array');
+        return res.status(200).json([]);
+      }
+      
       return res.status(500).json({ message: 'Error fetching products', error: error.message });
     }
   } else {

@@ -15,7 +15,7 @@ const PREDEFINED_CATEGORIES = {
  * @param {Object} product - Product object
  * @returns {Array} Array of extracted keywords
  */
-export function extractKeywords(product) {
+function extractKeywords(product) {
   const keywords = new Set();
   
   // Extract from product name
@@ -66,7 +66,7 @@ export function extractKeywords(product) {
  * @param {Array} keywords - Array of product keywords
  * @returns {String} Category name or 'Other'
  */
-export function categorizeProduct(keywords) {
+function categorizeProduct(keywords) {
   if (!keywords || keywords.length === 0) {
     return 'Other';
   }
@@ -99,7 +99,7 @@ export function categorizeProduct(keywords) {
  * @param {Array} products - Array of products
  * @returns {Array} Array of products with categories and keywords
  */
-export function categorizeProducts(products) {
+function categorizeProducts(products) {
   return products.map(product => {
     const keywords = extractKeywords(product);
     const category = categorizeProduct(keywords);
@@ -116,6 +116,14 @@ export function categorizeProducts(products) {
  * Get all available categories
  * @returns {Array} Array of category names
  */
-export function getAvailableCategories() {
+function getAvailableCategories() {
   return Object.keys(PREDEFINED_CATEGORIES).concat(['Other']);
 }
+
+// CommonJS exports for Node.js compatibility
+module.exports = {
+  extractKeywords,
+  categorizeProduct,
+  categorizeProducts,
+  getAvailableCategories
+};

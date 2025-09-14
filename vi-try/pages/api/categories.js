@@ -1,6 +1,6 @@
 import { connectMongoDB } from '@/config/mongodb';
 import products from '@/models/products';
-import { getAvailableCategories } from '@/utils/categorizeProducts';
+const { getAvailableCategories } = require('@/utils/categorizeProducts');
 
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
