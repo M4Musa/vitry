@@ -81,6 +81,11 @@ export default async function handler(req, res) {
     
     // Create a checkout session with Stripe
     try {
+      // Determine the base URL - use Vercel URL in production, fallback to NEXTAUTH_URL
+      const baseUrl = process.env.VERCEL_URL 
+        ? `https://${process.env.VERCEL_URL}` 
+        : (process.env.NEXTAUTH_URL || 'http://localhost:3000');
+      
       const stripeSession = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
         line_items: [
@@ -90,8 +95,8 @@ export default async function handler(req, res) {
           },
         ],
         mode: 'subscription',
-        success_url: `${process.env.NEXTAUTH_URL}/subscription?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${process.env.NEXTAUTH_URL}/subscription?canceled=true`,
+        success_url: `${baseUrl}/subscription?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${baseUrl}/subscription?canceled=true`,
         customer_email: session.user.email,
         metadata: {
           packageType: packageType,
