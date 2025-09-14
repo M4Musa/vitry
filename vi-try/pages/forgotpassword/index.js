@@ -3,7 +3,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import Link from 'next/link'; 
-import { useState } from 'react';
+import { UseState } from 'react';
 import { signIn } from 'next-auth/react'; // Import signIn from next-auth
 
 export default function ForgotPassword() {
@@ -17,9 +17,9 @@ export default function ForgotPassword() {
   }
 
 
-  const [email, setemail] = useState("");
-  const [error, seterror] = useState("");
-  const [success, setSuccess] = useState("");
+  const [email, setemail] = UseState("");
+  const [error, seterror] = UseState("");
+  const [success, setSuccess] = UseState("");
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 
