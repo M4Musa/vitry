@@ -7,9 +7,9 @@
     }
   ],
   "env": {
-    "MONGODB_URI": "@mongodb_uri",
-    "NEXTAUTH_SECRET": "@nextauth_secret",
-    "NEXTAUTH_URL": "@nextauth_url"
+    "MONGODB_URI": "mongodb+srv://admin:12345@vi-try.0cq8h.mongodb.net/myDatabase",
+    "NEXTAUTH_SECRET": "your-secret-key-here",
+    "NEXTAUTH_URL": "http://localhost:3000"
   },
   "functions": {
     "pages/api/**/*.js": {
